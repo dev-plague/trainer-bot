@@ -35,6 +35,10 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/onboarding");
   }
 
+  if (!currentProfile.birthDate) {
+    return redirect("/perfil");
+  }
+
   return { preferredName: currentProfile.preferredName, email: session.user.email };
 }
 

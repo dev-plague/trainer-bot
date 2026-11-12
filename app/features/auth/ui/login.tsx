@@ -5,12 +5,13 @@ import { authText } from "~/content/auth";
 import { common } from "~/content/common";
 import { safeRedirectPath } from "~/shared/lib/safe-redirect";
 import { Button } from "~/shared/ui/button";
+import { FieldError, FormError } from "~/shared/ui/form";
 import { Input } from "~/shared/ui/input";
 import { authErrorCode } from "../domain/errors";
 import { signInSchema } from "../domain/schemas";
 import { auth } from "../server";
 import type { Route } from "./+types/login";
-import { AuthShell, FieldError, FormError } from "./auth-shell";
+import { AuthShell } from "./auth-shell";
 
 type ActionData = {
   fieldErrors: Partial<Record<"email" | "password", string[]>>;

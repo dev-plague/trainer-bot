@@ -33,7 +33,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const currentProfile = await getProfile(session.user.id);
 
   if (currentProfile) {
-    return redirect("/cuenta");
+    return redirect(currentProfile.birthDate ? "/cuenta" : "/perfil");
   }
 
   return null;
@@ -64,7 +64,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   await saveProfile({ userId: session.user.id, ...parsed.data });
 
-  return redirect("/cuenta");
+  return redirect("/perfil");
 }
 
 export default function Onboarding() {

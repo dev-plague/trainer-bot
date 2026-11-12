@@ -59,7 +59,9 @@ un archivo), progresión automática entre semanas, login social y recuperación
   generar el plan.
 
 ### 3.5 Índice de masa corporal (IMC)
-- Solo para mayores de 18 años (para menores se usan percentiles; fuera del MVP).
+- Solo para mayores de 18 años (para menores se usan percentiles; fuera del MVP). El MVP no
+  atiende a menores: si el onboarding detecta menos de 18 años, se detiene con un mensaje
+  claro y no guarda el perfil ni genera plan.
 - Calcularlo, explicar qué es y sus límites (no distingue músculo de grasa).
 - Mostrar el rango saludable para su estatura y una **meta intermedia realista**.
   Nunca una cifra "ideal" única.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { profileSetupSchema } from "./profile";
+import { profileDetailsSchema, profileSetupSchema } from "./profile";
 
 describe("profileSetupSchema", () => {
   it("recorta el nombre preferido", () => {
@@ -35,5 +35,50 @@ describe("profileSetupSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("profileDetailsSchema", () => {
+  it("acepta un perfil válido sin peso", () => {
+    const result = profileDetailsSchema.parse({
+      birthDate: "1995-04-30",
+      heightCm: "170",
+      weightKg: "",
+    });
+
+    expect(result.heightCm).toBe(170);
+    expect(result.weightKg).toBeUndefined();
+  });
+
+  it("acepta el peso con decimales", () => {
+    const result = profileDetailsSchema.parse({
+      birthDate: "1995-04-30",
+      heightCm: "170",
+      weightKg: "70.5",
+    });
+
+    expect(result.weightKg).toBe(70.5);
+  });
+
+  it("rechaza estatura fuera de rango", () => {
+    expect(
+      profileDetailsSchema.safeParse({ birthDate: "1995-04-30", heightCm: "80" }).success,
+    ).toBe(false);
+  });
+
+  it("rechaza una fecha imposible", () => {
+    expect(
+      profileDetailsSchema.safeParse({ birthDate: "2020-02-31", heightCm: "170" }).success,
+    ).toBe(false);
+  });
+
+  it("rechaza peso fuera de rango", () => {
+    expect(
+      profileDetailsSchema.safeParse({
+        birthDate: "1995-04-30",
+        heightCm: "170",
+        weightKg: "500",
+      }).success,
+    ).toBe(false);
   });
 });
