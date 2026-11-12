@@ -138,7 +138,8 @@ bun run db:generate
 - Todo texto visible vive en `app/content/`, en español, agrupado por feature
   (`content/onboarding.ts`, `content/plans.ts`, `content/common.ts`).
 - Los saludos con hora se calculan en el cliente; el nombre que se usa es el **preferido**,
-  no el de la cuenta.
+  no el de la cuenta. El componente `shared/ui/greeting.tsx` arranca en «Hola» y se
+  actualiza al montar, para no romper la hidratación.
 - Iconos solo de `@hugeicons/react` (paquete gratuito, MIT). No se copian imágenes ni textos
   de terceros.
 

@@ -10,6 +10,7 @@ import {
   PARQ_VERSION,
 } from "~/features/onboarding";
 import { Button } from "~/shared/ui/button";
+import { Greeting } from "~/shared/ui/greeting";
 import { Input } from "~/shared/ui/input";
 import { getCurrentSession } from "../data/session";
 import { authErrorCode } from "../domain/errors";
@@ -118,7 +119,7 @@ export default function Account() {
         </p>
         <h1 className="text-2xl font-semibold tracking-tight">{authText.account.title}</h1>
         <p className="text-muted-foreground">
-          {authText.account.greeting}, {preferredName}.
+          <Greeting />, {preferredName}.
         </p>
       </div>
 

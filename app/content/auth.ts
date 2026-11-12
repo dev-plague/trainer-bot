@@ -26,7 +26,6 @@ export const authText = {
   },
   account: {
     title: "Tu cuenta",
-    greeting: "Hola",
     emailLabel: "Correo",
     signOut: "Cerrar sesión",
     settings: "Ajustes y trato",
