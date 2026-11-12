@@ -2,7 +2,7 @@ import { data, Form, redirect, useActionData, useLoaderData } from "react-router
 
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
-import { getAcceptedConsents, missingConsents } from "~/features/onboarding";
+import { getAcceptedConsents, getProfile, missingConsents } from "~/features/onboarding";
 import { Button } from "~/shared/ui/button";
 import { Input } from "~/shared/ui/input";
 import { getCurrentSession } from "../data/session";
@@ -29,7 +29,13 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/consentimiento");
   }
 
-  return { name: session.user.name, email: session.user.email };
+  const currentProfile = await getProfile(session.user.id);
+
+  if (!currentProfile) {
+    return redirect("/onboarding");
+  }
+
+  return { preferredName: currentProfile.preferredName, email: session.user.email };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -85,7 +91,7 @@ async function deleteAccount(request: Request, formData: FormData) {
 }
 
 export default function Account() {
-  const { name, email } = useLoaderData<typeof loader>();
+  const { preferredName, email } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   return (
@@ -96,7 +102,7 @@ export default function Account() {
         </p>
         <h1 className="text-2xl font-semibold tracking-tight">{authText.account.title}</h1>
         <p className="text-muted-foreground">
-          {authText.account.greeting}, {name}.
+          {authText.account.greeting}, {preferredName}.
         </p>
       </div>
 
