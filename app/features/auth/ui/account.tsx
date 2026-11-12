@@ -2,6 +2,7 @@ import { Form, redirect, useLoaderData } from "react-router";
 
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
+import { getAcceptedConsents, missingConsents } from "~/features/onboarding";
 import { Button } from "~/shared/ui/button";
 import { getCurrentSession } from "../data/session";
 import { auth } from "../server";
@@ -18,6 +19,12 @@ export async function loader({ request }: Route.LoaderArgs) {
     const url = new URL(request.url);
 
     return redirect(`/entrar?redirectTo=${encodeURIComponent(url.pathname)}`);
+  }
+
+  const accepted = await getAcceptedConsents(session.user.id);
+
+  if (missingConsents(accepted).length > 0) {
+    return redirect("/consentimiento");
   }
 
   return { name: session.user.name, email: session.user.email };

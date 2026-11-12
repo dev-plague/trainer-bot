@@ -8,6 +8,13 @@
       "when": 1794514126256,
       "tag": "0000_unique_runaways",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794515606450,
+      "tag": "0001_high_prodigy",
+      "breakpoints": true
     }
   ]
 }

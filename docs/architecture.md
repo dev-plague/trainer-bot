@@ -75,7 +75,8 @@ Reglas de dependencia:
 1. `domain/` no importa de `ui/` ni de `data/`, nunca.
 2. Una feature no importa los internos de otra; solo su `index.ts`. Si necesitas algo de
    otra feature y no está en su `index.ts`, la respuesta suele ser moverlo a `shared/` o
-   exponerlo a propósito.
+   exponerlo a propósito. Excepción: un esquema de `data/` puede importar la tabla de otra
+   feature para una clave foránea; lo que no se importa es su lógica.
 3. `shared/` no importa de `features/`. Si empieza a saber de planes o de IMC, ya no es
    compartido.
 4. `content/` solo contiene textos; ningún componente, consulta ni regla.
