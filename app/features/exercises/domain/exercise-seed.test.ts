@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validateSeed } from "./exercise-seed";
+import { exerciseSlugSchema, validateSeed } from "./exercise-seed";
 
 const base = {
   slug: "sentadilla-al-cuerpo",
@@ -57,5 +57,17 @@ describe("validateSeed", () => {
 
     expect(byGroup.get("squat")).toHaveLength(2);
     expect(byGroup.get("core")).toHaveLength(1);
+  });
+});
+
+describe("exerciseSlugSchema", () => {
+  it("acepta slugs en minúsculas con guiones", () => {
+    expect(exerciseSlugSchema.safeParse("sentadilla-al-cuerpo").success).toBe(true);
+  });
+
+  it("rechaza mayúsculas, espacios y barras", () => {
+    expect(exerciseSlugSchema.safeParse("Sentadilla").success).toBe(false);
+    expect(exerciseSlugSchema.safeParse("con espacios").success).toBe(false);
+    expect(exerciseSlugSchema.safeParse("../etc/passwd").success).toBe(false);
   });
 });
