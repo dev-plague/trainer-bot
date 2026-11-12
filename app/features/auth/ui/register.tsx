@@ -39,7 +39,7 @@ export async function action({ request }: Route.ActionArgs) {
       returnHeaders: true,
     });
 
-    return redirect("/cuenta", { headers });
+    return redirect("/consentimiento", { headers });
   } catch (error) {
     const code = authErrorCode(error);
     const emailTaken = code?.startsWith("USER_ALREADY_EXISTS") ?? false;
