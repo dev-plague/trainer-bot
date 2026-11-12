@@ -1,0 +1,51 @@
+name: Decisión (ADR)
+description: Una decisión técnica o de producto que debe quedar registrada
+title: "[decisión] "
+labels: ["decision"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Si la decisión cambia el stack, la arquitectura o el alcance, termina en un ADR o en
+        una PR al brief.
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decisión a tomar
+      description: Una frase, en forma de pregunta o de propuesta.
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto y restricciones
+      description: Qué la provoca, qué no se puede cambiar y qué se verificó con fuentes.
+    validations:
+      required: true
+  - type: textarea
+    id: opciones
+    attributes:
+      label: Opciones
+      description: Al menos dos, con lo bueno y lo malo de cada una.
+      placeholder: |
+        **A. ...** — a favor: ... / en contra: ...
+        **B. ...** — a favor: ... / en contra: ...
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios para elegir
+      description: Qué pesa más y por qué.
+    validations:
+      required: true
+  - type: textarea
+    id: consecuencias
+    attributes:
+      label: Consecuencias de la opción propuesta
+      description: Qué se vuelve más fácil, qué se vuelve más difícil y cuándo se revisa.
+  - type: input
+    id: documentos
+    attributes:
+      label: Documentos afectados
+      placeholder: "docs/adr/0002-..., docs/product/brief.md §5"
