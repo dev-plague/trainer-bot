@@ -27,7 +27,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   if (screening && screening.questionnaireVersion === PARQ_VERSION) {
     if (!screening.needsMedicalClearance) {
-      return redirect("/cuenta");
+      return redirect("/imc");
     }
 
     return { mode: "result" as const };
