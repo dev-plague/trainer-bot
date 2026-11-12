@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    name: Detectar scaffolding
+    runs-on: ubuntu-latest
+    outputs:
+      scaffolded: ${{ steps.check.outputs.scaffolded }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: check
+        run: |
+          if [ -f package.json ]; then
+            echo "scaffolded=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "scaffolded=false" >> "$GITHUB_OUTPUT"
+            echo "Sin package.json todavía: los checks de código se omiten hasta la iteración 1."
+          fi
+
+  typecheck:
+    name: Typecheck
+    needs: detect
+    if: needs.detect.outputs.scaffolded == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+
+  lint:
+    name: Lint
+    needs: detect
+    if: needs.detect.outputs.scaffolded == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+
+  test:
+    name: Tests
+    needs: detect
+    if: needs.detect.outputs.scaffolded == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Cuando existan pruebas de integración contra PostgreSQL, se añade un
+    # service con la misma versión mayor que producción:
+    #
+    # services:
+    #   postgres:
+    #     image: postgres:18
+    #     env:
+    #       POSTGRES_PASSWORD: postgres
+    #       POSTGRES_DB: trainerbot_test
+    #     ports: ["5432:5432"]
+    #     options: >-
+    #       --health-cmd pg_isready --health-interval 10s
+    #       --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - run: bun run test
+
+  build:
+    name: Build
+    needs: detect
+    if: needs.detect.outputs.scaffolded == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: bun install --frozen-lockfile
+      - run: bun run build
