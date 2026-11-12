@@ -135,7 +135,9 @@ export * from "~/features/plans/data/schema";
   ignora, y el dev server muere. Ver
   [`docs/research/viabilidad-stack.md`](research/viabilidad-stack.md).
 - Docker y CI usan Node 22.22 o superior.
-- Comandos previstos (se confirman al crear el scaffolding):
+- **Despliegue:** un VPS propio con Dokploy, al final del proyecto. Hasta entonces no se
+  escribe el Dockerfile de la app.
+- Comandos (los `db:*` llegan con Drizzle):
 
 ```bash
 bun install          # dependencias
@@ -147,7 +149,7 @@ bun run build
 bun run db:generate
 bun run db:migrate
 bun run db:seed
-docker compose up
+docker compose up -d # PostgreSQL local en 5433
 ```
 
 ## 7. Pruebas
