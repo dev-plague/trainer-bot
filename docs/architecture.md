@@ -31,7 +31,8 @@ app/
     auth/
       domain/              # reglas de sesión y permisos, sin Better Auth
       data/                # schema.ts generado por Better Auth + consultas
-      ui/                  # login, registro, recuperación
+      server.ts            # instancia de Better Auth (la carga su CLI)
+      ui/                  # login, registro y avisos
       index.ts             # API pública de la feature
     onboarding/
       domain/              # validaciones del cuestionario y del trato
@@ -114,9 +115,21 @@ export default [
 
 ```ts
 // app/db/schema.ts
-export * from "~/features/auth/data/schema";
-export * from "~/features/onboarding/data/schema";
-export * from "~/features/plans/data/schema";
+export * from "../features/auth/data/schema";
+export * from "../features/onboarding/data/schema";
+export * from "../features/plans/data/schema";
+```
+
+Se usan rutas relativas a propósito: `drizzle-kit` y el CLI de Better Auth no pasan por
+Vite ni resuelven el alias `~/`.
+
+El esquema de auth se regenera con su CLI cuando cambian sus opciones o plugins:
+
+```bash
+bun x auth@latest generate \
+  --config app/features/auth/server.ts \
+  --output app/features/auth/data/schema.ts --yes
+bun run db:generate
 ```
 
 ## 5. Textos e interfaz

@@ -12,6 +12,18 @@ aplica reglas sobre un catálogo curado de ejercicios. No hay chat ni LLM.
 Iteración 1 — fundaciones: scaffolding de React Router, base de datos y CI. Todavía no hay
 producto usable.
 
+## Base de datos
+
+Con PostgreSQL levantado (`docker compose up -d`, credenciales en `.env.example`), aplica las
+migraciones antes de arrancar la app:
+
+```bash
+bun run db:migrate
+```
+
+Las migraciones viven en `drizzle/` y se generan con `bun run db:generate`. Nunca se edita la
+base a mano.
+
 ## Documentación
 
 - [Brief de producto](docs/product/brief.md): el **qué** y el **por qué**. Fuente de verdad.
