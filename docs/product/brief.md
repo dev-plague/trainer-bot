@@ -30,7 +30,8 @@ ejercicio.
 
 **Fuera de alcance del MVP:** IA o chat, nutrición, pagos, funciones sociales, videos,
 notificaciones, PWA/offline, gamificación, multi-idioma (solo se centralizan los textos en
-un archivo), progresión automática entre semanas, login social.
+un archivo), progresión automática entre semanas, login social y recuperación de contraseña
+(requiere un proveedor de correo).
 
 ## 3. Funcionalidades
 
@@ -144,7 +145,8 @@ cualquier IA entienda la base, las normas y los lineamientos sin cambiar el para
 ## 8. Privacidad
 
 Los datos de salud son sensibles (Ley 1581 de 2012, Colombia): pedir consentimiento,
-recolectar solo lo necesario y ofrecer borrado de cuenta.
+recolectar solo lo necesario y ofrecer borrado de cuenta inmediato, con confirmación
+explícita.
 
 ## 9. Flujo de trabajo en GitHub
 

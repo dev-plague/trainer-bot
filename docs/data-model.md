@@ -273,5 +273,5 @@ otra persona: no hay endpoints públicos que lean estas tablas.
 3. ¿`limitations` como texto libre o lista cerrada? Propuesta: texto libre con un aviso de
    que no sustituye una valoración médica; convertirlo en lista es trabajo de una segunda
    iteración.
-4. Borrado de cuenta: ¿borrado inmediato o 30 días de gracia? Requiere decisión de producto
-   antes de implementar `app/features/auth`.
+4. ~~¿Borrado de cuenta inmediato o con 30 días de gracia?~~ **Resuelto:** borrado inmediato
+   con confirmación explícita (brief §8).

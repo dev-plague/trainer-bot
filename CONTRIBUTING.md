@@ -50,6 +50,10 @@ bun run db:seed      # cargar catálogo de ejercicios
 docker compose up    # app + PostgreSQL para desarrollo
 ```
 
+**Lint y formato** corren con Biome, y las pruebas con Vitest (ver
+[ADR 0002](docs/adr/0002-calidad-y-pruebas.md)). No hay pruebas de navegador en el MVP: los
+flujos críticos se revisan a mano en móvil y escritorio.
+
 **Nunca uses `bun --bun react-router ...`.** Bun ignora `NODE_OPTIONS` y el CLI de React
 Router 8.3+ falla al relanzarse. Bun instala y ejecuta scripts; Node corre el framework. Ver
 [docs/research/viabilidad-stack.md](docs/research/viabilidad-stack.md).
@@ -92,12 +96,16 @@ Una PR está lista cuando:
 - actualiza brief o ADR si cambió una decisión;
 - deja el repositorio mejor de como estaba: sin código muerto, sin TODOs sin issue.
 
-## Configuración de GitHub pendiente
+## Configuración de GitHub
 
-Estos ajustes requieren permisos de administración y se hacen a mano una vez:
+Ya aplicada en `dev-plague/trainer-bot`:
 
-- Proteger `main`: PR obligatoria, CI verde, sin force push, sin borrado de rama.
-- Desactivar merge automático.
-- Permitir solo squash merge, para que el historial quede con un commit por PR.
+- `main` protegida: PR obligatoria, rama actualizada antes de mergear y estos checks en
+  verde: `Detectar scaffolding`, `Typecheck`, `Lint`, `Tests` y `Build`.
+- Sin force push ni borrado de `main`.
+- Solo squash merge; la rama se borra al mergear.
+- Sin merge automático.
+- `enforce_admins` desactivado a propósito: dev-plague puede saltarse la protección en una
+  emergencia y lo deja anotado en el issue.
 
-Si falta alguno, se anota en el issue correspondiente en lugar de asumir que está hecho.
+Si algo cambia, se actualiza esta sección en la misma PR que lo cambie.

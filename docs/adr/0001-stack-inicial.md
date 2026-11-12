@@ -24,14 +24,15 @@ manera obvia de construir cada cosa y poder migrar de versión sin reescribir.
 | Framework | React Router 8.5 en modo framework (Vite 8.3, `@vitejs/plugin-react` 6.3). Import desde `react-router` |
 | Paquetes y scripts | Bun 1.4 |
 | Runtime de la app y del CLI | Node 22.22+ (Docker y CI) |
-| Base de datos | PostgreSQL |
+| Base de datos | PostgreSQL 18 |
 | ORM | Drizzle ORM 0.45 + drizzle-kit 0.31 (la 1.0 está en RC) |
 | Autenticación | Better Auth 1.7 con adaptador de Drizzle |
 | Estilos | Tailwind CSS 4.3 + shadcn/ui |
 | Iconos | `@hugeicons/react` 1.1 (MIT) |
 | Validación | Zod 4.6 |
 | Pruebas | Vitest 5.1 |
-| Contenedores | Docker multi-stage + docker-compose con PostgreSQL |
+| Lint y formato | Biome 2.6 ([ADR 0002](0002-calidad-y-pruebas.md)) |
+| Contenedores | Docker multi-stage + docker-compose con PostgreSQL 18 |
 
 Detalle y fuentes en [`docs/research/viabilidad-stack.md`](../research/viabilidad-stack.md).
 

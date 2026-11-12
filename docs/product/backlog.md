@@ -41,7 +41,7 @@ Docker; `typecheck`, `lint`, `test` y `build` pasan; CI corre esos cuatro checks
 
 | Tarea | Tamaño | Cómo se verifica |
 |---|---|---|
-| Scaffolding de React Router 8 en modo framework con TypeScript estricto, Vite, Tailwind 4 y shadcn/ui | M | `bun run dev` abre la pantalla inicial; `bun run build` genera `build/client` y `build/server` |
+| Scaffolding de React Router 8 en modo framework con TypeScript estricto, Vite, Tailwind 4, shadcn/ui y Biome | M | `bun run dev` abre la pantalla inicial; `bun run build` genera `build/client` y `build/server` |
 | Configurar Vitest con un test de humo en `domain/` | S | `bun run test` corre y falla si se rompe el test |
 | `docker-compose.yml` con PostgreSQL y `.env.example` | S | `docker compose up` levanta la base; la app conecta |
 | Cliente Drizzle + `drizzle.config.ts` + migración inicial | M | `bun run db:generate` produce una migración; `db:migrate` la aplica en limpio |
@@ -63,11 +63,10 @@ seguridad aceptados con fecha y consentimiento de datos guardado; rutas privadas
 | Inicio y cierre de sesión, y protección de rutas privadas | M | Sin sesión, una ruta privada redirige a login; con sesión, entra |
 | Pantalla de avisos de seguridad con aceptación explícita y fecha | S | No se puede continuar sin aceptar; la fecha queda en `consent` |
 | Consentimiento de tratamiento de datos de salud | S | Se guarda `kind = health_data` con versión del texto |
-| Recuperación de contraseña | S | Envío y uso del enlace; si no hay proveedor de correo, se decide y se documenta antes |
-| Borrado de cuenta con datos asociados | M | Tras borrar, no queda fila en `user`, `profile`, `health_screening` ni `plan` |
+| Borrado de cuenta inmediato con datos asociados | M | Tras borrar, no queda fila en `user`, `profile`, `health_screening` ni `plan` |
 
-> El borrado depende de una decisión de producto (inmediato o con plazo de gracia). Ver §6 de
-> [`docs/data-model.md`](../data-model.md).
+> La recuperación de contraseña queda fuera del MVP (brief §2): exige un proveedor de correo.
+> El borrado es inmediato con confirmación, ya decidido.
 
 ## E2 — Onboarding y trato
 
