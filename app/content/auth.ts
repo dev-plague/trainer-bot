@@ -28,6 +28,7 @@ export const authText = {
     title: "Tu cuenta",
     emailLabel: "Correo",
     signOut: "Cerrar sesión",
+    settings: "Ajustes y trato",
     soon: "El cuestionario de salud y tu plan llegan en la siguiente iteración.",
     deleteTitle: "Eliminar mi cuenta",
     deleteBody:
