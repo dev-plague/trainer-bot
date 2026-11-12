@@ -5,6 +5,12 @@ export const common = {
     "No soy una IA: soy un programa que aplica reglas sobre un catálogo de ejercicios curado. Sin chat y sin promesas raras.",
   createAccount: "Crear cuenta",
   login: "Entrar",
+  greetings: {
+    hello: "Hola",
+    morning: "Buenos días",
+    afternoon: "Buenas tardes",
+    evening: "Buenas noches",
+  },
   errors: {
     errorTitle: "Error",
     unexpectedTitle: "Algo salió mal",

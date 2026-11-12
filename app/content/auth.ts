@@ -26,7 +26,6 @@ export const authText = {
   },
   account: {
     title: "Tu cuenta",
-    greeting: "Hola",
     emailLabel: "Correo",
     signOut: "Cerrar sesión",
     soon: "El cuestionario de salud y tu plan llegan en la siguiente iteración.",
