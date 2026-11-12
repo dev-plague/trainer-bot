@@ -9,8 +9,8 @@ aplica reglas sobre un catálogo curado de ejercicios. No hay chat ni LLM.
 
 ## Estado
 
-Iteración 0 — bases del proyecto: documentación, arquitectura y CI. Todavía no hay
-código de producto.
+Iteración 1 — fundaciones: scaffolding de React Router, base de datos y CI. Todavía no hay
+producto usable.
 
 ## Documentación
 

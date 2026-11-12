@@ -89,7 +89,7 @@ viven en la `ui/` de su feature, no en una carpeta `routes/` paralela.
 
 ```ts
 // app/routes.ts
-import { type RouteConfig, index, route } from "react-router";
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 export default [
   index("features/onboarding/ui/welcome.tsx"),
