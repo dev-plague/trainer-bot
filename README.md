@@ -12,6 +12,19 @@ aplica reglas sobre un catálogo curado de ejercicios. No hay chat ni LLM.
 Iteración 1 — fundaciones: scaffolding de React Router, base de datos y CI. Todavía no hay
 producto usable.
 
+## Empezar
+
+Requiere Bun y Docker.
+
+```bash
+bun install
+cp .env.example .env
+docker compose up -d     # PostgreSQL en localhost:5433
+bun run dev              # http://localhost:5173
+```
+
+`.env` no se versiona; el ejemplo trae credenciales solo para desarrollo.
+
 ## Documentación
 
 - [Brief de producto](docs/product/brief.md): el **qué** y el **por qué**. Fuente de verdad.
