@@ -6,6 +6,7 @@ export default [
   route("entrar", "features/auth/ui/login.tsx"),
   route("consentimiento", "features/onboarding/ui/consent.tsx"),
   route("onboarding", "features/onboarding/ui/onboarding.tsx"),
+  route("perfil", "features/onboarding/ui/profile-details.tsx"),
   route("cuenta", "features/auth/ui/account.tsx"),
   route("api/auth/*", "features/auth/ui/auth-handler.ts"),
 ] satisfies RouteConfig;

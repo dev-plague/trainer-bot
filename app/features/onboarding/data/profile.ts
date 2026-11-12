@@ -29,3 +29,22 @@ export async function saveProfile(input: SaveProfileInput) {
       },
     });
 }
+
+export type ProfileDetailsInput = {
+  userId: string;
+  birthDate: string;
+  heightCm: number;
+  weightKg: number | null;
+};
+
+export async function saveProfileDetails(input: ProfileDetailsInput) {
+  await db
+    .update(profile)
+    .set({
+      birthDate: input.birthDate,
+      heightCm: input.heightCm,
+      weightKg: input.weightKg === null ? null : String(input.weightKg),
+      updatedAt: new Date(),
+    })
+    .where(eq(profile.userId, input.userId));
+}

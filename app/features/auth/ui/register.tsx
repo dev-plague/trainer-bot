@@ -4,12 +4,13 @@ import { z } from "zod";
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
 import { Button } from "~/shared/ui/button";
+import { FieldError, FormError } from "~/shared/ui/form";
 import { Input } from "~/shared/ui/input";
 import { authErrorCode } from "../domain/errors";
 import { signUpSchema } from "../domain/schemas";
 import { auth } from "../server";
 import type { Route } from "./+types/register";
-import { AuthShell, FieldError, FormError } from "./auth-shell";
+import { AuthShell } from "./auth-shell";
 
 type ActionData = {
   fieldErrors: Partial<Record<"name" | "email" | "password", string[]>>;
