@@ -38,3 +38,4 @@ Reglas:
 | ADR | Título | Estado |
 |---|---|---|
 | [0001](0001-stack-inicial.md) | Stack inicial | propuesto |
+| [0002](0002-calidad-y-pruebas.md) | Calidad de código y pruebas | propuesto |
