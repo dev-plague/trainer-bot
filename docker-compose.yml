@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: trainerbot
+      POSTGRES_PASSWORD: trainerbot
+      POSTGRES_DB: trainerbot
+    ports:
+      # 5433 en el host para no chocar con un PostgreSQL local en 5432.
+      - "5433:5432"
+    volumes:
+      # PostgreSQL 18 usa /var/lib/postgresql (con subdirectorio por versión mayor).
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trainerbot -d trainerbot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  db-data:
