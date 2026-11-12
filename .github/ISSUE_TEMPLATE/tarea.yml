@@ -1,0 +1,54 @@
+name: Tarea
+description: Una funcionalidad o un cambio de producto
+title: "[tarea] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Una tarea debe caber en una PR. Si no cabe, pártela.
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Por qué existe esta tarea y qué problema resuelve. Enlaza el brief si aplica.
+    validations:
+      required: true
+  - type: textarea
+    id: alcance
+    attributes:
+      label: Alcance
+      description: Qué incluye, en viñetas. Sé concreto.
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Cómo sabemos que está terminada. Si se puede verificar, mejor.
+      placeholder: |
+        - [ ] Se puede completar el onboarding en un móvil de 360 px
+        - [ ] El nombre preferido aparece en el saludo
+    validations:
+      required: true
+  - type: textarea
+    id: fuera
+    attributes:
+      label: Fuera de alcance
+      description: Lo que alguien podría asumir incluido y no lo está.
+  - type: input
+    id: dependencias
+    attributes:
+      label: Dependencias
+      description: Issues que deben resolverse antes, o "ninguna".
+      placeholder: "#12, #14"
+  - type: checkboxes
+    id: reglas
+    attributes:
+      label: Reglas de dominio
+      description: Marca lo que aplique; si no aplica ninguna, déjalo vacío.
+      options:
+        - label: No introduce pesos en kg
+        - label: No debilita los avisos de seguridad
+        - label: Los ejercicios nuevos traen `fuente`
+        - label: Los textos van a `app/content/`

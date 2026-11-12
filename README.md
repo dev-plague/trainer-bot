@@ -19,4 +19,5 @@ código de producto.
 
 ## Flujo de trabajo
 
-Todo cambio sigue: **issue → rama → PR → CI verde → merge por dev-plague**.
+Todo cambio sigue: **issue → rama → PR → CI verde → merge por dev-plague**. El detalle
+(ramas, commits, comandos y qué revisa un revisor) está en [CONTRIBUTING.md](CONTRIBUTING.md).

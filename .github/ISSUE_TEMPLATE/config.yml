@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Brief de producto
+    url: https://github.com/dev-plague/trainer-bot/blob/main/docs/product/brief.md
+    about: Antes de proponer alcance nuevo, revisa qué está dentro del MVP.
+  - name: Guía para agentes y desarrolladores
+    url: https://github.com/dev-plague/trainer-bot/blob/main/AGENTS.md
+    about: Stack, reglas de dominio y flujo de trabajo.
