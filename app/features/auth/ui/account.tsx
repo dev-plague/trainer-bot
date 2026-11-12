@@ -1,4 +1,4 @@
-import { data, Form, redirect, useActionData, useLoaderData } from "react-router";
+import { data, Form, Link, redirect, useActionData, useLoaderData } from "react-router";
 
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
@@ -126,6 +126,13 @@ export default function Account() {
         <dt className="text-sm text-muted-foreground">{authText.account.emailLabel}</dt>
         <dd className="font-medium break-all">{email}</dd>
       </dl>
+
+      <Link
+        to="/ajustes"
+        className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+      >
+        {authText.account.settings}
+      </Link>
 
       <p className="text-sm text-muted-foreground">{authText.account.soon}</p>
 
