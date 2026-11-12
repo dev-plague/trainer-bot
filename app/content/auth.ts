@@ -30,6 +30,16 @@ export const authText = {
     emailLabel: "Correo",
     signOut: "Cerrar sesión",
     soon: "El onboarding y los planes llegan en la siguiente iteración.",
+    deleteTitle: "Eliminar mi cuenta",
+    deleteBody:
+      "Esto borra tu cuenta, tus consentimientos y tus datos de forma inmediata. No se puede deshacer.",
+    deleteConfirmLabel: "Escribe ELIMINAR para confirmar",
+    deletePasswordLabel: "Tu contraseña",
+    deleteSubmit: "Eliminar mi cuenta",
+    deleteConfirmError: "Escribe ELIMINAR en mayúsculas para confirmar.",
+    deletePasswordError: "Escribe tu contraseña.",
+    deleteWrongPassword: "La contraseña no es correcta.",
+    deleteGeneric: "No pudimos eliminar la cuenta. Inténtalo de nuevo.",
   },
   errors: {
     invalidEmail: "Escribe un correo válido.",
