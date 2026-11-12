@@ -128,12 +128,14 @@ export default function Account() {
         <dd className="font-medium break-all">{email}</dd>
       </dl>
 
-      <Link
-        to="/ajustes"
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-      >
-        {authText.account.settings}
-      </Link>
+      <nav className="flex flex-col gap-2 text-sm">
+        <Link to="/imc" className="font-medium text-primary underline-offset-4 hover:underline">
+          {authText.account.bmi}
+        </Link>
+        <Link to="/ajustes" className="font-medium text-primary underline-offset-4 hover:underline">
+          {authText.account.settings}
+        </Link>
+      </nav>
 
       <p className="text-sm text-muted-foreground">{authText.account.soon}</p>
 
