@@ -111,7 +111,7 @@ export async function action({ request }: Route.ActionArgs) {
     weightKg: parsed.data.weightKg ?? null,
   });
 
-  return redirect("/cuenta");
+  return redirect("/salud");
 }
 
 export default function ProfileDetails() {

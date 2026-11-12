@@ -2,7 +2,13 @@ import { data, Form, redirect, useActionData, useLoaderData } from "react-router
 
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
-import { getAcceptedConsents, getProfile, missingConsents } from "~/features/onboarding";
+import {
+  getAcceptedConsents,
+  getProfile,
+  getScreening,
+  missingConsents,
+  PARQ_VERSION,
+} from "~/features/onboarding";
 import { Button } from "~/shared/ui/button";
 import { Input } from "~/shared/ui/input";
 import { getCurrentSession } from "../data/session";
@@ -37,6 +43,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   if (!currentProfile.birthDate) {
     return redirect("/perfil");
+  }
+
+  const screening = await getScreening(session.user.id);
+
+  if (!screening || screening.questionnaireVersion !== PARQ_VERSION) {
+    return redirect("/salud");
   }
 
   return { preferredName: currentProfile.preferredName, email: session.user.email };

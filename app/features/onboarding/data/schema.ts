@@ -1,6 +1,8 @@
 import {
+  boolean,
   date,
   integer,
+  jsonb,
   numeric,
   pgEnum,
   pgTable,
@@ -42,4 +44,14 @@ export const profile = pgTable("profile", {
   weightKg: numeric("weight_kg", { precision: 5, scale: 1 }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const healthScreening = pgTable("health_screening", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  answers: jsonb("answers").$type<Record<string, boolean>>().notNull(),
+  questionnaireVersion: text("questionnaire_version").notNull(),
+  needsMedicalClearance: boolean("needs_medical_clearance").notNull(),
+  answeredAt: timestamp("answered_at", { withTimezone: true }).defaultNow().notNull(),
 });
