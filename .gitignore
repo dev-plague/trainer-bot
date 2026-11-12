@@ -1,0 +1,43 @@
+# Dependencias
+node_modules/
+.bun/
+
+# Build y artefactos
+build/
+dist/
+.output/
+.vite/
+*.tsbuildinfo
+
+# Tests
+coverage/
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Base de datos local
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Misc
+.tmp/
+.cache/
