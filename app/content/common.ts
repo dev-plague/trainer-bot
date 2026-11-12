@@ -3,8 +3,8 @@ export const common = {
   tagline: "Tu entrenador personal, sincero y sin humo.",
   notAi:
     "No soy una IA: soy un programa que aplica reglas sobre un catálogo de ejercicios curado. Sin chat y sin promesas raras.",
-  start: "Empezar",
-  comingSoon: "Muy pronto. Estamos construyendo la primera versión.",
+  createAccount: "Crear cuenta",
+  login: "Entrar",
   errors: {
     errorTitle: "Error",
     unexpectedTitle: "Algo salió mal",
