@@ -28,7 +28,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const accepted = await getAcceptedConsents(session.user.id);
 
   if (missingConsents(accepted).length === 0) {
-    return redirect("/cuenta");
+    return redirect("/onboarding");
   }
 
   return null;
@@ -53,7 +53,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   await recordConsents(session.user.id, CONSENT_KINDS);
 
-  return redirect("/cuenta");
+  return redirect("/onboarding");
 }
 
 export default function Consent() {

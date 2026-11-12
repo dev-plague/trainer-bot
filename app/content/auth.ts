@@ -29,7 +29,7 @@ export const authText = {
     greeting: "Hola",
     emailLabel: "Correo",
     signOut: "Cerrar sesión",
-    soon: "El onboarding y los planes llegan en la siguiente iteración.",
+    soon: "El cuestionario de salud y tu plan llegan en la siguiente iteración.",
     deleteTitle: "Eliminar mi cuenta",
     deleteBody:
       "Esto borra tu cuenta, tus consentimientos y tus datos de forma inmediata. No se puede deshacer.",
