@@ -148,7 +148,7 @@ recolectar solo lo necesario y ofrecer borrado de cuenta.
 
 ## 9. Flujo de trabajo en GitHub
 
-- Repositorio: `dev-plague/trainerbot`.
+- Repositorio: `dev-plague/trainer-bot`.
 - Todo cambio sigue: **issue → rama → PR → CI verde → merge por dev-plague**.
 - Commits convencionales; plantillas de issue y de PR.
 - El autor de una PR no puede aprobarla en GitHub: si un agente usa la cuenta de
