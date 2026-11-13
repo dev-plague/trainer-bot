@@ -1,7 +1,7 @@
 import { Link, redirect, useLoaderData } from "react-router";
 
 import { common } from "~/content/common";
-import { exercisesText } from "~/content/exercises";
+import { equipmentLabel, exercisesText } from "~/content/exercises";
 import { getCurrentSession } from "~/features/auth";
 import { exerciseSlugSchema, getExerciseBySlug } from "~/features/exercises";
 import type { Route } from "./+types/exercise-detail";
@@ -70,7 +70,7 @@ export default function ExerciseDetail() {
         <h2 className="text-sm font-semibold">{exercisesText.equipment}</h2>
         <p className="text-sm text-muted-foreground">
           {exercise.equipment.length > 0
-            ? exercise.equipment.join(", ")
+            ? exercise.equipment.map(equipmentLabel).join(", ")
             : exercisesText.noEquipment}
         </p>
       </section>

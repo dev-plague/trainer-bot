@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { EQUIPMENT } from "./equipment";
+
 export const EXERCISE_PLACES = ["home", "gym", "outdoor"] as const;
 export type ExercisePlace = (typeof EXERCISE_PLACES)[number];
 
@@ -35,7 +37,7 @@ export const exerciseSeedSchema = z.object({
   name: z.string().trim().min(1, "El nombre es obligatorio").max(80),
   primaryMuscles: textList.min(1, "Indica al menos un músculo principal"),
   secondaryMuscles: textList.default([]),
-  equipment: textList.default([]),
+  equipment: z.array(z.enum(EQUIPMENT)).default([]),
   place: z.enum(EXERCISE_PLACES),
   level: z.enum(EXERCISE_LEVELS),
   tips: textList.min(1, "Agrega al menos un consejo de ejecución"),

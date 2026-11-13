@@ -166,7 +166,7 @@ Sin `source` no hay ejercicio. El seed es un archivo versionado en git.
 | `status` | enum: `active`, `archived` | Un solo `active` por persona |
 | `goal` | enum: `general_health`, `fat_loss`, `strength`, `endurance` | Perfiles de [`motor-de-planes.md`](product/motor-de-planes.md) |
 | `experience_level` | enum | |
-| `days_per_week` | integer | 2–6 |
+| `days_per_week` | integer | 2–5 |
 | `session_minutes` | integer | |
 | `place` | enum | |
 | `equipment` | text[] | |
@@ -244,7 +244,7 @@ El progreso de una sesión **se deriva** de estos registros: la pantalla retoma 
   `create unique index on plan (user_id) where status = 'active'`.
 - `plan (user_id)`, `plan_day (plan_id)`, `plan_exercise (plan_day_id, position)`,
   `workout_session (user_id, status)`, `exercise_log (workout_session_id, position)`.
-- `check` de rango: `days_per_week between 2 and 6`, `perceived_effort between 1 and 10`,
+- `check` de rango: `days_per_week between 2 and 5`, `perceived_effort between 1 and 10`,
   `sets > 0`, `reps > 0`.
 - Toda FK de datos personales usa `ON DELETE CASCADE` para que borrar la cuenta borre el
   rastro; `exercise` y su catálogo quedan fuera (son datos públicos del producto).
