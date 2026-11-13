@@ -1,5 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 
+import type { Equipment, ExerciseLevel, ExerciseMeasure } from "~/features/exercises";
 import { exercise } from "~/features/exercises/data/schema";
 import { updatePendingLogsForPlanExercise } from "~/features/sessions";
 import { db } from "~/shared/db/client";
@@ -12,6 +13,9 @@ import { plan, planDay, planExercise } from "./schema";
 export type SubstitutionOption = {
   slug: string;
   name: string;
+  equipment: Equipment[];
+  level: ExerciseLevel;
+  measure: ExerciseMeasure;
 };
 
 export type SubstitutionView = {
@@ -84,6 +88,9 @@ export async function getSubstitutionView(
     options: candidates.map((item) => ({
       slug: item.slug,
       name: nameBySlug.get(item.slug) ?? item.slug,
+      equipment: item.equipment,
+      level: item.level,
+      measure: item.measure,
     })),
   };
 }

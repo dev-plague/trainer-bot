@@ -18,6 +18,11 @@ export {
   PLAN_WARNING_CODES,
   planRequestSchema,
 } from "./domain/contract";
+export type {
+  ExercisePrescription,
+  SharedDayPrescription,
+} from "./domain/day-summary";
+export { samePrescription, sharedDayPrescription } from "./domain/day-summary";
 export type { CandidateExercise } from "./domain/generate";
 export { estimateDayWorkMinutes, generatePlan } from "./domain/generate";
 export type { EffectiveProfile, PlanGoal, PlanProfile, Range } from "./domain/profiles";

@@ -3,13 +3,14 @@ import { Link, redirect, useLoaderData } from "react-router";
 import { common } from "~/content/common";
 import { equipmentLabel, exercisesText, muscleLabel } from "~/content/exercises";
 import { getCurrentSession } from "~/features/auth";
-import { exerciseSlugSchema, getExerciseBySlug } from "~/features/exercises";
+import { exerciseSlugSchema } from "~/features/exercises";
 import { Badge } from "~/shared/ui/badge";
 import { Button } from "~/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
 import { ExerciseTypeBadge, MuscleBadges } from "~/shared/ui/exercise-meta";
 import { AlertIcon, ArrowRightIcon } from "~/shared/ui/icons";
 import { PageHeader } from "~/shared/ui/page-header";
+import { getExerciseBySlug } from "../data/exercises";
 import type { Route } from "./+types/exercise-detail";
 
 export function meta() {

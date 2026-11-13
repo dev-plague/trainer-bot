@@ -1,5 +1,10 @@
 import type { EquivalenceGroup } from "~/features/exercises";
-import type { PlanExercisePrescription, PlanWarning } from "~/features/plans";
+import {
+  type PlanExercisePrescription,
+  type PlanWarning,
+  type SharedDayPrescription,
+  samePrescription,
+} from "~/features/plans";
 
 export const plansText = {
   formTitle: "Armemos tu plan",
@@ -69,6 +74,9 @@ export const plansText = {
   noOptions: "No hay otra opción compatible con tu equipo y tus limitaciones.",
   apply: "Usar este",
   cancel: "Cancelar",
+  changing: "Cambiando…",
+  changeConfirmed: (name: string) => `Listo: ahora haces «${name}».`,
+  changeError: "No pude cambiar el ejercicio. Inténtalo otra vez.",
   emptyDay: "Este día quedó sin ejercicios.",
   types: {
     strength: "Fuerza",
@@ -102,12 +110,34 @@ export const plansText = {
     mobility: "movilidad",
   } satisfies Record<EquivalenceGroup, string>,
   warningsTitle: "Ajustes que hice",
-  today: "Sesión de hoy",
+  nextSession: "Tu próxima sesión",
   continueSession: "Continúa donde quedaste",
-  nextSession: "Tu próximo entrenamiento",
   startDay: "Empezar este día",
   exercisesCount: (count: number) => `${count} ejercicios`,
+  completed: "Completado",
+  completedDay: "Completaste este día",
+  sharedDayLabel: "Base del día",
+  weekCompleteTitle: "Semana cumplida",
+  weekCompleteBody:
+    "Completaste todos los días de este plan. Descansa y vuelve cuando quieras empezar otra semana.",
+  rir: {
+    trigger: "¿Qué significa?",
+    title: "Repeticiones en reserva (RIR)",
+    body: "El RIR es cuántas repeticiones más podrías hacer cuando terminas la serie. Nos sirve para entrenar cerca del esfuerzo, sin llegar al fallo.",
+    example:
+      "Si te digo «deja unas 4 repeticiones sin hacer», termina la serie cuando sientas que aún podrías hacer 4 más.",
+  },
+  timedOption: "Por tiempo",
+  optionEquipment: "Equipo",
 };
+
+export function rirText(rir: number): string {
+  const reserve = Math.max(1, Math.round(rir));
+
+  if (reserve === 1) return "Deja 1 repetición sin hacer";
+
+  return `Deja unas ${reserve} repeticiones sin hacer`;
+}
 
 export function prescriptionText(prescription: PlanExercisePrescription["prescription"]): string {
   switch (prescription.kind) {
@@ -121,7 +151,7 @@ export function prescriptionText(prescription: PlanExercisePrescription["prescri
             ? String(reps.min)
             : `${reps.min}-${reps.max}`;
 
-      return `${prescription.sets} × ${label} reps · RIR ${prescription.rir} · ${prescription.restSeconds} s de descanso`;
+      return `${prescription.sets} × ${label} reps · ${rirText(prescription.rir)} · ${prescription.restSeconds} s de descanso`;
     }
     case "isometric":
       return `${prescription.sets} × ${prescription.seconds.min}-${prescription.seconds.max} s · ${prescription.restSeconds} s de descanso`;
@@ -130,6 +160,19 @@ export function prescriptionText(prescription: PlanExercisePrescription["prescri
     case "mobility":
       return `${prescription.sets} × ${prescription.reps} reps`;
   }
+}
+
+/**
+ * Lo que va en cada tarjeta cuando la cabecera ya muestra la prescripción
+ * común del día: si el ejercicio repite lo mismo, la tarjeta no lo repite.
+ */
+export function prescriptionDetailText(
+  prescription: PlanExercisePrescription["prescription"],
+  shared: SharedDayPrescription | null,
+): string | null {
+  if (shared && samePrescription(prescription, shared)) return null;
+
+  return prescriptionText(prescription);
 }
 
 export function warningText(warning: PlanWarning): string {

@@ -1,0 +1,1 @@
+ALTER TABLE "exercise_log" ADD COLUMN "sets_completed" integer DEFAULT 0 NOT NULL;
