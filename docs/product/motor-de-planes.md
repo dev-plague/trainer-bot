@@ -59,10 +59,14 @@ Cada perfil lleva `fuente`: OMS para el cardio, ACSM para la fuerza.
 aplicable. Se verifica con un test en el CI: si el catálogo rompe la invariante, el build falla.
 Así un día nunca queda imposible de armar por falta de opciones.
 
+El test vive en `app/features/exercises/domain/catalog-invariant.test.ts` y comprueba, además,
+que cada grupo de equivalencia tenga al menos dos ejercicios.
+
 ### 2.2 Equipo simplificado
 
 Lista cerrada: `ninguno`, `mancuernas`, `bandas`, `barra de dominadas`, `banco o silla`,
-`gimnasio completo`. "Gimnasio completo" implica todo lo anterior.
+`cuerda`, `gimnasio completo`. "Gimnasio completo" implica todo lo anterior. `ninguno` admite
+objetos de casa que no son equipo de entrenamiento, como una toalla.
 
 ### 2.3 Cascada por cada hueco del día
 
@@ -107,15 +111,12 @@ tono cercano y sincero de Trainerbot. Ejemplo:
 
 Estos puntos no se resolvieron en la decisión y hay que cerrarlos al escribir el motor:
 
-1. **Equipo del seed.** El catálogo usa etiquetas como "Banda elástica", "Barra", "Polea" o
-   "Cuerda", que no coinciden con la lista cerrada. Al implementar se normaliza el seed y se
-   decide qué pasa con la cuerda, que hoy no aparece en la lista.
-2. **Invariante del catálogo.** Hoy no se cumple: tirón no tiene ejercicio sin equipo y
-   empuje no tiene versión de principiante sin equipo. Se corrige añadiendo ejercicios
-   (por ejemplo, remo con toalla y flexiones con rodillas apoyadas) antes de activar el test.
-3. **Persistencia de avisos.** El plan debe guardar sus `avisos` para que sobrevivan a una
+1. **Normalizar el equipo del seed.** El catálogo todavía usa etiquetas ("Banda elástica",
+   "Barra", "Polea") y no las claves de la lista cerrada. Al escribir el motor se mapean a
+   `mancuernas`, `bandas`, `barra-de-dominadas`, `cuerda`, etc., y se tipa el campo.
+2. **Persistencia de avisos.** El plan debe guardar sus `avisos` para que sobrevivan a una
    recarga; se añade la columna al modelo en la PR de persistencia.
-4. **Deltas exactos del nivel.** La regla dice "una serie menos, 1-2 RIR más, más descanso";
+3. **Deltas exactos del nivel.** La regla dice "una serie menos, 1-2 RIR más, más descanso";
    los números concretos se fijan en los perfiles y se prueban.
 
 ## 5. Fuentes
