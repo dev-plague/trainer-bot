@@ -6,7 +6,7 @@ import {
   EXERCISE_PLACES,
   type ExerciseLevel,
 } from "~/features/exercises";
-import { PLAN_GOALS, type PlanGoal } from "./profiles";
+import { PLAN_GOALS, type PlanGoal, type Range } from "./profiles";
 
 export const PLAN_MODES = ["strict", "flexible"] as const;
 export type PlanMode = (typeof PLAN_MODES)[number];
@@ -17,7 +17,7 @@ export const MIN_SESSION_MINUTES = 20;
 export const MAX_SESSION_MINUTES = 120;
 
 /** Subir esta versión cuando cambien perfiles o reglas del motor. */
-export const ENGINE_VERSION = "1";
+export const ENGINE_VERSION = "2";
 
 export const planRequestSchema = z.object({
   goal: z.enum(PLAN_GOALS),
@@ -51,8 +51,14 @@ export type PlanExercisePrescription = {
     | {
         kind: "strength";
         sets: number;
-        reps: number;
+        reps: Range;
         rir: number;
+        restSeconds: number;
+      }
+    | {
+        kind: "isometric";
+        sets: number;
+        seconds: Range;
         restSeconds: number;
       }
     | {
@@ -67,7 +73,15 @@ export type PlanExercisePrescription = {
       };
 };
 
-export const PLAN_DAY_CATEGORIES = ["full_body", "upper", "lower", "cardio"] as const;
+export const PLAN_DAY_CATEGORIES = [
+  "full_body",
+  "upper",
+  "lower",
+  "push_quads",
+  "pull_posterior",
+  "legs_shoulders_core",
+  "cardio",
+] as const;
 export type PlanDayCategory = (typeof PLAN_DAY_CATEGORIES)[number];
 
 export type PlanDay = {

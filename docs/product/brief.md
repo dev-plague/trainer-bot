@@ -72,15 +72,22 @@ Objetivo, nivel de experiencia, días por semana, duración por sesión, lugar
 (aire libre / gimnasio / casa), equipo disponible, lesiones o limitaciones y modo
 (estricto o flexible).
 
+El plan segmenta los días por grupos musculares y patrones según cuántos días elija la
+persona (2 cuerpo completo A/B; 3 empuje + cuádriceps, tirón + cadena posterior, piernas +
+hombros + core; 4 torso/pierna con variantes; 5 añade cardio). El detalle está en
+[motor-de-planes.md](motor-de-planes.md) §1.3.
+
 ### 3.7 Modo estricto y modo flexible
 - **Estricto:** plan semanal fijo, sin cambios.
 - **Flexible:** cada día define una *categoría* (p. ej. fuerza de tren superior, cardio) y
   la persona puede cambiar un ejercicio por otro del mismo **grupo de equivalencia**
-  (caminar, trotar, saltar la cuerda, peso corporal, etc.).
+  (caminar, trotar, saltar la cuerda, peso corporal, etc.) que además encaje en el foco
+  muscular de ese día.
 
 ### 3.8 Sesión guiada
 Una pantalla por ejercicio con: nombre, músculos implicados, tips de ejecución y prevención
-de lesiones, series y repeticiones, y un botón "Hecho, siguiente".
+de lesiones, series y repeticiones (o tiempo en segundos para isométricos), y un botón
+"Hecho, siguiente". Las repeticiones se muestran como rango (p. ej. 10-12).
 - **Sin pesos en kg.** La intensidad se indica por esfuerzo percibido o repeticiones en
   reserva (p. ej. "termina con 2 repeticiones de reserva").
 - El progreso de la sesión se guarda para poder retomarla.
@@ -104,15 +111,17 @@ obligatorias— está en [motor-de-planes.md](motor-de-planes.md).
 
 | Objetivo | Fuerza | Series × reps | RIR | Cardio |
 |---|---|---|---|---|
-| Salud general | 2-3 días, cuerpo completo | 2 × 10-15 | 3-4 | Progresivo hasta 150 min/semana |
-| Perder grasa | 2-3 días, cuerpo completo | 2-3 × 10-15 | 2-3 | Moderado, 2-3 días |
-| Fuerza / músculo | 3 días, completo o torso/pierna | 2-3 × 8-12 | 2-3 | Ligero, 1-2 días |
-| Resistencia | 2 días, complementaria | 1-2 × 12-15 | 3 | Mayoría del plan, por tiempo |
+| Salud general | 2-3 días | 2 × 10-15 | 3-4 | Progresivo hasta 150 min/semana |
+| Perder grasa | 2-3 días | 2-3 × 10-15 | 2-3 | Moderado, 2-3 días |
+| Fuerza / músculo | 3 días | 2-3 × 8-12 | 2-3 | Ligero, 1-2 días |
+| Resistencia | 2 días | 1-2 × 12-15 | 3 | Mayoría del plan, por tiempo |
 
 Reglas que no se negocian:
 
 - El nivel modifica el perfil (una serie menos, más RIR, más descanso); un principiante nunca
   recibe ejercicios complejos.
+- Los días se segmentan por grupos musculares según cuántos elija la persona (ver §1.3 del
+  documento del motor); los isométricos se prescriben en segundos.
 - Nadie entrena al fallo: RIR mínimo 2. La intensidad nunca se expresa en kilos.
 - Si el equipo no alcanza, se prueba por orden: equivalencia con el equipo disponible,
   regresión o progresión, versión de peso corporal y, si nada encaja, se omite el patrón y se

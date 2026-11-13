@@ -5,7 +5,7 @@ import { exerciseSlugSchema, validateSeed } from "./exercise-seed";
 const base = {
   slug: "sentadilla-al-cuerpo",
   name: "Sentadilla al cuerpo",
-  primaryMuscles: ["Cuádriceps"],
+  primaryMuscles: ["quads"],
   place: "home",
   level: "beginner",
   tips: ["Baja con la espalda recta."],

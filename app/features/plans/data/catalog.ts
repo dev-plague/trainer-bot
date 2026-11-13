@@ -11,6 +11,8 @@ export async function loadCandidateExercises(): Promise<CandidateExercise[]> {
       level: exercise.level,
       equipment: exercise.equipment,
       equivalenceGroup: exercise.equivalenceGroup,
+      primaryMuscles: exercise.primaryMuscles,
+      measure: exercise.measure,
       contraindications: exercise.contraindications,
       isComplex: exercise.isComplex,
     })

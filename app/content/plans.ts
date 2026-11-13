@@ -73,6 +73,9 @@ export const plansText = {
     full_body: "Cuerpo completo",
     upper: "Torso",
     lower: "Pierna",
+    push_quads: "Empuje y cuádriceps",
+    pull_posterior: "Tirón y cadena posterior",
+    legs_shoulders_core: "Piernas, hombros y core",
     cardio: "Cardio",
   },
   intensities: {
@@ -88,6 +91,7 @@ export const plansText = {
     hinge: "bisagra de cadera",
     core: "core",
     cardio: "cardio",
+    calves: "gemelos",
     mobility: "movilidad",
   } satisfies Record<EquivalenceGroup, string>,
   warningsTitle: "Ajustes que hice",
@@ -95,8 +99,20 @@ export const plansText = {
 
 export function prescriptionText(prescription: PlanExercisePrescription["prescription"]): string {
   switch (prescription.kind) {
-    case "strength":
-      return `${prescription.sets} × ${prescription.reps} reps · RIR ${prescription.rir} · ${prescription.restSeconds} s de descanso`;
+    case "strength": {
+      // Compatibilidad con planes guardados antes de las repeticiones por rango.
+      const reps = prescription.reps as { min: number; max: number } | number;
+      const label =
+        typeof reps === "number"
+          ? String(reps)
+          : reps.min === reps.max
+            ? String(reps.min)
+            : `${reps.min}-${reps.max}`;
+
+      return `${prescription.sets} × ${label} reps · RIR ${prescription.rir} · ${prescription.restSeconds} s de descanso`;
+    }
+    case "isometric":
+      return `${prescription.sets} × ${prescription.seconds.min}-${prescription.seconds.max} s · ${prescription.restSeconds} s de descanso`;
     case "cardio":
       return `${prescription.minutes} min · ${plansText.intensities[prescription.intensity]}`;
     case "mobility":

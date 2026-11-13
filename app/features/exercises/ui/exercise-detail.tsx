@@ -1,7 +1,7 @@
 import { Link, redirect, useLoaderData } from "react-router";
 
 import { common } from "~/content/common";
-import { equipmentLabel, exercisesText } from "~/content/exercises";
+import { equipmentLabel, exercisesText, muscleLabel } from "~/content/exercises";
 import { getCurrentSession } from "~/features/auth";
 import { exerciseSlugSchema, getExerciseBySlug } from "~/features/exercises";
 import type { Route } from "./+types/exercise-detail";
@@ -58,10 +58,13 @@ export default function ExerciseDetail() {
 
       <section className="space-y-1">
         <h2 className="text-sm font-semibold">{exercisesText.muscles}</h2>
-        <p className="text-sm text-muted-foreground">{exercise.primaryMuscles.join(", ")}</p>
+        <p className="text-sm text-muted-foreground">
+          {exercise.primaryMuscles.map(muscleLabel).join(", ")}
+        </p>
         {exercise.secondaryMuscles.length > 0 ? (
           <p className="text-xs text-muted-foreground">
-            {exercisesText.secondaryMuscles}: {exercise.secondaryMuscles.join(", ")}
+            {exercisesText.secondaryMuscles}:{" "}
+            {exercise.secondaryMuscles.map(muscleLabel).join(", ")}
           </p>
         ) : null}
       </section>
