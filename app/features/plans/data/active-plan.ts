@@ -13,6 +13,7 @@ import type { PlanGoal } from "../domain/profiles";
 import { plan, planDay, planExercise } from "./schema";
 
 export type ActivePlanExercise = {
+  planExerciseId: string;
   slug: string;
   name: string;
   position: number;
@@ -62,6 +63,7 @@ export async function getActivePlan(userId: string): Promise<ActivePlan | null> 
     dayIds.length > 0
       ? await db
           .select({
+            planExerciseId: planExercise.id,
             dayId: planExercise.planDayId,
             position: planExercise.position,
             prescription: planExercise.prescription,
@@ -80,6 +82,7 @@ export async function getActivePlan(userId: string): Promise<ActivePlan | null> 
     const list = byDay.get(item.dayId) ?? [];
 
     list.push({
+      planExerciseId: item.planExerciseId,
       slug: item.slug,
       name: item.name,
       position: item.position,

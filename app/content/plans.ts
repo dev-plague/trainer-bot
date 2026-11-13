@@ -59,6 +59,15 @@ export const plansText = {
   },
   dayLabel: "Día",
   regenerate: "Crear un plan nuevo",
+  change: "Cambiar",
+  substituteTitle: "Cambiar ejercicio",
+  substituteSubtitle:
+    "Solo aparecen ejercicios del mismo tipo que puedas hacer con tu equipo y sin chocar con tus limitaciones.",
+  currentLabel: "Ahora",
+  optionsLabel: "Opciones",
+  noOptions: "No hay otra opción compatible con tu equipo y tus limitaciones.",
+  apply: "Usar este",
+  cancel: "Cancelar",
   emptyDay: "Este día quedó sin ejercicios.",
   categories: {
     full_body: "Cuerpo completo",

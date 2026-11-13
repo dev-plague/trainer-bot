@@ -97,7 +97,7 @@ function buildDay(
     0,
     (request.sessionMinutes - WARMUP_MINUTES - COOLDOWN_MINUTES) * 60,
   );
-  const pool = catalog.filter((exercise) => isAllowed(exercise, request));
+  const pool = catalog.filter((exercise) => isExerciseAvailable(exercise, request));
 
   const exercises =
     category === "cardio"
@@ -258,11 +258,25 @@ function levelScore(exerciseLevel: ExerciseLevel, requestLevel: ExerciseLevel): 
   return distance < 0 ? 1 : 2;
 }
 
-function isAllowed(exercise: CandidateExercise, request: PlanRequest): boolean {
-  if (request.level === "beginner" && exercise.isComplex) return false;
-  if (!placeAllows(exercise, request.place)) return false;
-  if (!equipmentAllows(request.equipment, exercise.equipment)) return false;
-  if (isContraindicated(exercise, request.limitations)) return false;
+export type ExerciseContext = {
+  place: ExercisePlace;
+  equipment: readonly Equipment[];
+  level: ExerciseLevel;
+  limitations: string;
+};
+
+/**
+ * Mismas reglas para generar y para sustituir en modo flexible: lugar, equipo,
+ * nivel (sin complejos para principiantes) y limitaciones.
+ */
+export function isExerciseAvailable(
+  exercise: CandidateExercise,
+  context: ExerciseContext,
+): boolean {
+  if (context.level === "beginner" && exercise.isComplex) return false;
+  if (!placeAllows(exercise, context.place)) return false;
+  if (!equipmentAllows(context.equipment, exercise.equipment)) return false;
+  if (isContraindicated(exercise, context.limitations)) return false;
 
   return true;
 }
