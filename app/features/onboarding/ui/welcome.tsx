@@ -1,10 +1,16 @@
 import { Link } from "react-router";
 
 import { common } from "~/content/common";
+import { requireGuest } from "~/features/auth";
 import { Button } from "~/shared/ui/button";
+import type { Route } from "./+types/welcome";
 
 export function meta() {
   return [{ title: common.appName }, { name: "description", content: common.tagline }];
+}
+
+export async function loader({ request }: Route.LoaderArgs) {
+  return requireGuest(request);
 }
 
 export default function Welcome() {

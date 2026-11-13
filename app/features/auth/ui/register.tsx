@@ -6,6 +6,7 @@ import { common } from "~/content/common";
 import { Button } from "~/shared/ui/button";
 import { FieldError, FormError } from "~/shared/ui/form";
 import { Input } from "~/shared/ui/input";
+import { requireGuest } from "../data/guards";
 import { authErrorCode } from "../domain/errors";
 import { signUpSchema } from "../domain/schemas";
 import { auth } from "../server";
@@ -21,7 +22,13 @@ export function meta() {
   return [{ title: `${authText.register.title} · ${common.appName}` }];
 }
 
+export async function loader({ request }: Route.LoaderArgs) {
+  return requireGuest(request);
+}
+
 export async function action({ request }: Route.ActionArgs) {
+  await requireGuest(request);
+
   const formData = await request.formData();
   const parsed = signUpSchema.safeParse(Object.fromEntries(formData));
 

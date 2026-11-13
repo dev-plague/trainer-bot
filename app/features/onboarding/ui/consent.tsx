@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { common } from "~/content/common";
 import { consentText } from "~/content/consent";
-import { getCurrentSession } from "~/features/auth";
+import { requireUser } from "~/features/auth";
 import { Button } from "~/shared/ui/button";
 import { getAcceptedConsents, recordConsents } from "../data/consents";
 import { CONSENT_KINDS, missingConsents } from "../domain/consents";
@@ -19,11 +19,7 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    return redirect(`/entrar?redirectTo=${encodeURIComponent("/consentimiento")}`);
-  }
+  const session = await requireUser(request, "/consentimiento");
 
   const accepted = await getAcceptedConsents(session.user.id);
 
@@ -35,11 +31,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    return redirect(`/entrar?redirectTo=${encodeURIComponent("/consentimiento")}`);
-  }
+  const session = await requireUser(request, "/consentimiento");
 
   const formData = await request.formData();
   const parsed = consentFormSchema.safeParse({
