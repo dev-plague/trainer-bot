@@ -1,7 +1,8 @@
 export { updatePendingLogsForPlanExercise } from "./data/plan-sync";
 export {
   applyRegression,
-  completeCurrentExercise,
+  completeSet,
+  getCompletedDayIndices,
   getInProgressSessionForUser,
 } from "./data/session-actions";
 export type { SessionExercise, SessionState } from "./data/session-state";

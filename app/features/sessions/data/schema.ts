@@ -44,6 +44,8 @@ export const exerciseLog = pgTable(
       .references(() => exercise.id, { onDelete: "restrict" }),
     position: integer("position").notNull(),
     status: exerciseLogStatusEnum("status").notNull().default("pending"),
+    /** Series ya completadas de este ejercicio; permite retomar a media serie. */
+    setsCompleted: integer("sets_completed").notNull().default(0),
     completedAt: timestamp("completed_at", { withTimezone: true }),
     note: text("note"),
   },

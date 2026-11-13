@@ -14,6 +14,7 @@ import {
   Cancel01Icon,
   CheckmarkCircle02Icon,
   Dumbbell01Icon,
+  HelpCircleIcon,
   Logout01Icon,
   Settings01Icon,
   ShoulderIcon,
@@ -83,6 +84,18 @@ export function AlertIcon(props: IconProps) {
 
 export function SuccessIcon(props: IconProps) {
   return <HugeiconsIcon icon={CheckmarkCircle02Icon} {...props} />;
+}
+
+export function HelpIcon(props: IconProps) {
+  return <HugeiconsIcon icon={HelpCircleIcon} {...props} />;
+}
+
+export function TimerIcon(props: IconProps) {
+  return <HugeiconsIcon icon={Timer01Icon} {...props} />;
+}
+
+export function DumbbellIcon(props: IconProps) {
+  return <HugeiconsIcon icon={Dumbbell01Icon} {...props} />;
 }
 
 export type ExerciseKind = "strength" | "isometric" | "cardio" | "mobility";

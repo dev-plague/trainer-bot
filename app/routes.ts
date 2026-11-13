@@ -10,9 +10,10 @@ export default [
   route("salud", "features/onboarding/ui/health-screening.tsx"),
   layout("shared/ui/app-shell.tsx", [
     route("imc", "features/bmi/ui/bmi-screen.tsx"),
-    route("plan", "features/plans/ui/plan-view.tsx"),
+    route("plan", "features/plans/ui/plan-view.tsx", [
+      route("ejercicio/:planExerciseId", "features/plans/ui/exercise-substitute.tsx"),
+    ]),
     route("plan/nuevo", "features/plans/ui/plan-form.tsx"),
-    route("plan/ejercicio/:planExerciseId", "features/plans/ui/exercise-substitute.tsx"),
     route("ejercicios/:slug", "features/exercises/ui/exercise-detail.tsx"),
     route("cuenta", "features/auth/ui/account.tsx"),
     route("ajustes", "features/onboarding/ui/settings.tsx"),

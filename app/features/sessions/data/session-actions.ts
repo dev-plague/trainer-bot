@@ -1,8 +1,9 @@
 import { and, asc, desc, eq } from "drizzle-orm";
 
 import { exercise } from "~/features/exercises/data/schema";
-import { plan, planDay } from "~/features/plans/data/schema";
+import { plan, planDay, planExercise } from "~/features/plans/data/schema";
 import { db } from "~/shared/db/client";
+import { completeSetStep, restSecondsFor, totalSetsFor } from "../domain/session-progress";
 import { exerciseLog, workoutSession } from "./schema";
 
 async function findOwnedSession(userId: string, sessionId: string) {
@@ -15,32 +16,54 @@ async function findOwnedSession(userId: string, sessionId: string) {
   return session ?? null;
 }
 
-async function findCurrentLog(sessionId: string) {
+export type CompleteSetResult =
+  | {
+      ok: true;
+      setsDone: number;
+      totalSets: number;
+      exerciseDone: boolean;
+      sessionDone: boolean;
+      restSeconds: number;
+    }
+  | { ok: false };
+
+/**
+ * Marca una serie del ejercicio actual. La última serie cierra el ejercicio y,
+ * si era el último pendiente, completa la sesión. El progreso queda persistido
+ * para poder retomar la sesión donde se quedó.
+ */
+export async function completeSet(userId: string, sessionId: string): Promise<CompleteSetResult> {
+  const session = await findOwnedSession(userId, sessionId);
+
+  if (session?.status !== "in_progress") return { ok: false };
+
   const [current] = await db
-    .select({ id: exerciseLog.id })
+    .select({
+      id: exerciseLog.id,
+      setsDone: exerciseLog.setsCompleted,
+      prescription: planExercise.prescription,
+    })
     .from(exerciseLog)
+    .innerJoin(planExercise, eq(planExercise.id, exerciseLog.planExerciseId))
     .where(and(eq(exerciseLog.workoutSessionId, sessionId), eq(exerciseLog.status, "pending")))
     .orderBy(asc(exerciseLog.position))
     .limit(1);
 
-  return current ?? null;
-}
+  if (!current) return { ok: false };
 
-/** Marca el primer ejercicio pendiente como hecho y completa la sesión si era el último. */
-export async function completeCurrentExercise(userId: string, sessionId: string): Promise<boolean> {
-  const session = await findOwnedSession(userId, sessionId);
-
-  if (session?.status !== "in_progress") return false;
-
-  const current = await findCurrentLog(sessionId);
-
-  if (!current) return false;
+  const step = completeSetStep(current.setsDone, totalSetsFor(current.prescription));
+  let sessionDone = false;
 
   await db.transaction(async (tx) => {
     await tx
       .update(exerciseLog)
-      .set({ status: "done", completedAt: new Date() })
+      .set({
+        setsCompleted: step.setsDone,
+        ...(step.exerciseDone ? { status: "done" as const, completedAt: new Date() } : {}),
+      })
       .where(eq(exerciseLog.id, current.id));
+
+    if (!step.exerciseDone) return;
 
     const [remaining] = await tx
       .select({ id: exerciseLog.id })
@@ -49,6 +72,8 @@ export async function completeCurrentExercise(userId: string, sessionId: string)
       .limit(1);
 
     if (!remaining) {
+      sessionDone = true;
+
       await tx
         .update(workoutSession)
         .set({ status: "completed", completedAt: new Date() })
@@ -56,7 +81,14 @@ export async function completeCurrentExercise(userId: string, sessionId: string)
     }
   });
 
-  return true;
+  return {
+    ok: true,
+    setsDone: step.setsDone,
+    totalSets: step.totalSets,
+    exerciseDone: step.exerciseDone,
+    sessionDone,
+    restSeconds: restSecondsFor(current.prescription),
+  };
 }
 
 /**
@@ -84,10 +116,27 @@ export async function applyRegression(userId: string, sessionId: string): Promis
 
   await db
     .update(exerciseLog)
-    .set({ exerciseId: current.regressionId })
+    .set({ exerciseId: current.regressionId, setsCompleted: 0 })
     .where(eq(exerciseLog.id, current.logId));
 
   return true;
+}
+
+/** Días del plan activo que ya tienen una sesión completada. */
+export async function getCompletedDayIndices(userId: string, planId: string): Promise<number[]> {
+  const rows = await db
+    .selectDistinct({ dayIndex: planDay.dayIndex })
+    .from(workoutSession)
+    .innerJoin(planDay, eq(planDay.id, workoutSession.planDayId))
+    .where(
+      and(
+        eq(workoutSession.userId, userId),
+        eq(workoutSession.status, "completed"),
+        eq(planDay.planId, planId),
+      ),
+    );
+
+  return rows.map((row) => row.dayIndex).sort((a, b) => a - b);
 }
 
 export async function getInProgressSessionForUser(userId: string) {

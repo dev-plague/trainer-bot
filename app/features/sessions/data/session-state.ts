@@ -14,6 +14,7 @@ export type SessionExercise = {
   logId: string;
   position: number;
   status: "pending" | "done" | "skipped";
+  setsDone: number;
   prescription: PlanExercisePrescription["prescription"];
   slug: string;
   name: string;
@@ -58,6 +59,7 @@ export async function getSessionState(
       logId: exerciseLog.id,
       position: exerciseLog.position,
       status: exerciseLog.status,
+      setsDone: exerciseLog.setsCompleted,
       prescription: planExercise.prescription,
       slug: exercise.slug,
       name: exercise.name,
@@ -78,6 +80,7 @@ export async function getSessionState(
     logId: row.logId,
     position: row.position,
     status: row.status,
+    setsDone: row.setsDone,
     prescription: row.prescription,
     slug: row.slug,
     name: row.name,

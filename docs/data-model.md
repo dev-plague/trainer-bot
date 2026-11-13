@@ -230,13 +230,16 @@ la idea de "sesión de entrenamiento" del producto en el código.
 | `original_exercise_id` | text FK → `exercise`, nullable | Ejercicio original si se sustituyó en modo flexible |
 | `position` | integer | Copia del orden al momento de entrenar |
 | `status` | enum: `pending`, `done`, `skipped` | |
+| `sets_completed` | integer | Series hechas del ejercicio; permite retomar a media serie |
 | `completed_at` | timestamptz | |
 | `perceived_effort` | integer 1–10 | Opcional, lo que la persona quiera registrar |
 | `reps_in_reserve` | integer | Opcional |
 | `note` | text | |
 
-El progreso de una sesión **se deriva** de estos registros: la pantalla retoma en el primer
-`pending`. No se guarda un puntero aparte que pueda desincronizarse.
+El progreso de una sesión **se deriva** de estos registros: el ejercicio actual es el primer
+`pending` y la serie actual sale de `sets_completed`. No se guarda un puntero aparte que pueda
+desincronizarse. La finalización por día se consulta desde `workout_session.status` y
+`plan_day_id`, sin una tabla extra de semanas.
 
 ## 3. Índices y restricciones
 
