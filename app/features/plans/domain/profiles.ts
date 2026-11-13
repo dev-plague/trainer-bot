@@ -26,6 +26,7 @@ export type PlanProfile = {
   reps: Range;
   rir: Range;
   restSeconds: Range;
+  isometricSeconds: Range;
   cardio: CardioProfile;
   source: string;
 };
@@ -41,6 +42,7 @@ export const PLAN_PROFILES: Record<PlanGoal, PlanProfile> = {
     reps: { min: 10, max: 15 },
     rir: { min: 3, max: 4 },
     restSeconds: { min: 60, max: 90 },
+    isometricSeconds: { min: 20, max: 40 },
     cardio: {
       sessionsPerWeek: { min: 2, max: 3 },
       intensity: "light_moderate",
@@ -56,6 +58,7 @@ export const PLAN_PROFILES: Record<PlanGoal, PlanProfile> = {
     reps: { min: 10, max: 15 },
     rir: { min: 2, max: 3 },
     restSeconds: { min: 45, max: 75 },
+    isometricSeconds: { min: 20, max: 40 },
     cardio: {
       sessionsPerWeek: { min: 2, max: 3 },
       intensity: "moderate",
@@ -71,6 +74,7 @@ export const PLAN_PROFILES: Record<PlanGoal, PlanProfile> = {
     reps: { min: 8, max: 12 },
     rir: { min: 2, max: 3 },
     restSeconds: { min: 90, max: 120 },
+    isometricSeconds: { min: 20, max: 45 },
     cardio: {
       sessionsPerWeek: { min: 1, max: 2 },
       intensity: "light",
@@ -86,6 +90,7 @@ export const PLAN_PROFILES: Record<PlanGoal, PlanProfile> = {
     reps: { min: 12, max: 15 },
     rir: { min: 3, max: 3 },
     restSeconds: { min: 45, max: 60 },
+    isometricSeconds: { min: 30, max: 60 },
     cardio: {
       sessionsPerWeek: { min: 3, max: 5 },
       intensity: "moderate",

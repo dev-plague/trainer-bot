@@ -1,4 +1,5 @@
-import type { EquivalenceGroup } from "~/features/exercises";
+import type { EquivalenceGroup } from "~/features/exercises/domain/exercise-seed";
+import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 import type { CandidateExercise, ExerciseContext } from "./generate";
 import { isExerciseAvailable } from "./generate";
 
@@ -15,12 +16,14 @@ export function availableSubstitutes(
   current: SubstitutionTarget,
   catalog: readonly CandidateExercise[],
   context: ExerciseContext,
+  focus?: readonly MuscleGroup[],
 ): CandidateExercise[] {
   return catalog
     .filter(
       (exercise) =>
         exercise.slug !== current.slug &&
         exercise.equivalenceGroup === current.equivalenceGroup &&
+        (focus === undefined || exercise.primaryMuscles.some((muscle) => focus.includes(muscle))) &&
         isExerciseAvailable(exercise, context),
     )
     .sort((a, b) => a.slug.localeCompare(b.slug));

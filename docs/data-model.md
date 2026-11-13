@@ -142,11 +142,12 @@ regla que lo interpreta vive en `onboarding/domain`.
 | `id` | text PK | |
 | `slug` | text único | Estable para seeds e i18n futuro |
 | `name` | text | |
-| `primary_muscles` | text[] | |
-| `secondary_muscles` | text[] | |
-| `equipment` | text[] | |
+| `primary_muscles` | enum[]: `chest`, `back`, `shoulders`, `biceps`, `triceps`, `quads`, `hamstrings`, `glutes`, `calves`, `core` | Foco del día y agrupación |
+| `secondary_muscles` | enum[] | Mismo vocabulario |
+| `equipment` | text[] | Claves cerradas de equipo |
 | `place` | enum: `home`, `gym`, `outdoor` | |
 | `level` | enum: `beginner`, `intermediate`, `advanced` | |
+| `measure` | enum: `reps`, `seconds` | Los isométricos se prescriben por tiempo |
 | `tips` | text[] | Ejecución y prevención de lesiones |
 | `contraindications` | text[] | |
 | `equivalence_group` | text | Base del modo flexible (§3.7) |
@@ -188,7 +189,7 @@ legibles.
 | `id` | text PK | |
 | `plan_id` | text FK | `ON DELETE CASCADE` |
 | `day_index` | integer | 1–7, relativo a la semana |
-| `category` | text | "Fuerza tren superior", "Cardio", "Descanso"… |
+| `category` | text | `full_body`, `upper`, `lower`, `push_quads`, `pull_posterior`, `legs_shoulders_core`, `cardio` |
 | `is_rest` | boolean | |
 
 ### `plan_exercise`
@@ -199,10 +200,10 @@ legibles.
 | `plan_day_id` | text FK | `ON DELETE CASCADE` |
 | `exercise_id` | text FK → `exercise` | `ON DELETE RESTRICT`: el catálogo no se borra |
 | `position` | integer | Orden dentro del día |
-| `prescription` | jsonb | Unión discriminada: fuerza (series/reps/RIR/descanso), cardio (minutos) o movilidad |
+| `prescription` | jsonb | Unión discriminada: fuerza (series/rango de reps/RIR/descanso), isométrico (series/rango de segundos/descanso), cardio (minutos) o movilidad |
 
-La prescripción va en `jsonb` porque tiene tres formas distintas; llenar la tabla de columnas
-nulas por tipo no aportaba nada. No existe ninguna columna de peso ni de carga: es una
+La prescripción va en `jsonb` porque tiene cuatro formas distintas; llenar la tabla de columnas
+nulas por tipo no aportaba nada. Las repeticiones y los segundos son rangos (`{min,max}`). No existe ninguna columna de peso ni de carga: es una
 decisión de diseño, no un olvido.
 
 ### `workout_session`

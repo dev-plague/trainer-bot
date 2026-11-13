@@ -1,4 +1,5 @@
 import type { Equipment } from "~/features/exercises";
+import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 
 export const exercisesText = {
   back: "Volver",
@@ -14,6 +15,18 @@ export const exercisesText = {
     cuerda: "Cuerda",
     "gimnasio-completo": "Gimnasio completo",
   } satisfies Record<Equipment, string>,
+  muscleLabels: {
+    chest: "Pectoral",
+    back: "Espalda",
+    shoulders: "Hombros",
+    biceps: "Bíceps",
+    triceps: "Tríceps",
+    quads: "Cuádriceps",
+    hamstrings: "Isquiotibiales",
+    glutes: "Glúteos",
+    calves: "Gemelos",
+    core: "Core",
+  } satisfies Record<MuscleGroup, string>,
   tips: "Cómo hacerlo",
   contraindications: "Ten cuidado si tienes",
   regression: "Si te cuesta o no te sientes cómodo, prueba esta versión",
@@ -32,4 +45,8 @@ export const exercisesText = {
 
 export function equipmentLabel(key: string): string {
   return exercisesText.equipmentLabels[key as Equipment] ?? key;
+}
+
+export function muscleLabel(key: string): string {
+  return exercisesText.muscleLabels[key as MuscleGroup] ?? key;
 }

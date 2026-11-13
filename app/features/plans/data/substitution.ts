@@ -5,6 +5,7 @@ import { updatePendingLogsForPlanExercise } from "~/features/sessions";
 import { db } from "~/shared/db/client";
 import type { PlanMode } from "../domain/contract";
 import { availableSubstitutes } from "../domain/substitution";
+import { categoryFocus } from "../domain/templates";
 import { loadCandidateExercises } from "./catalog";
 import { plan, planDay, planExercise } from "./schema";
 
@@ -30,6 +31,7 @@ export async function getSubstitutionView(
       slug: exercise.slug,
       name: exercise.name,
       group: exercise.equivalenceGroup,
+      category: planDay.category,
       mode: plan.mode,
       place: plan.place,
       equipment: plan.equipment,
@@ -57,6 +59,7 @@ export async function getSubstitutionView(
       level: row.level,
       limitations: row.limitations,
     },
+    categoryFocus(row.category),
   );
 
   const names =

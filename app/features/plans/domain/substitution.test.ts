@@ -13,6 +13,8 @@ const context: ExerciseContext = {
 function candidate(
   overrides: Partial<CandidateExercise> & Pick<CandidateExercise, "slug">,
 ): CandidateExercise {
+  const { primaryMuscles, measure, ...rest } = overrides;
+
   return {
     place: "home",
     level: "beginner",
@@ -20,7 +22,9 @@ function candidate(
     equivalenceGroup: "squat",
     contraindications: [],
     isComplex: false,
-    ...overrides,
+    ...rest,
+    primaryMuscles: primaryMuscles ?? [],
+    measure: measure ?? "reps",
   };
 }
 
@@ -72,6 +76,17 @@ describe("availableSubstitutes", () => {
     expect(availableSubstitutes(current, catalog, context).map((item) => item.slug)).toEqual([
       "sentadilla-pared",
     ]);
+  });
+
+  it("respeta el foco muscular del día", () => {
+    const catalog = [
+      candidate({ slug: "sentadilla-goblet", primaryMuscles: ["quads"] }),
+      candidate({ slug: "peso-muerto-rumano", primaryMuscles: ["hamstrings"] }),
+    ];
+
+    expect(
+      availableSubstitutes(current, catalog, context, ["quads"]).map((item) => item.slug),
+    ).toEqual(["sentadilla-goblet"]);
   });
 
   it("devuelve una lista ordenada y estable", () => {

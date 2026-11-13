@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { EQUIPMENT } from "./equipment";
+import { EXERCISE_MEASURES, MUSCLE_GROUPS } from "./muscles";
 
 export const EXERCISE_PLACES = ["home", "gym", "outdoor"] as const;
 export type ExercisePlace = (typeof EXERCISE_PLACES)[number];
@@ -20,6 +21,7 @@ export const EQUIVALENCE_GROUPS = [
   "hinge",
   "core",
   "cardio",
+  "calves",
   "mobility",
 ] as const;
 export type EquivalenceGroup = (typeof EQUIVALENCE_GROUPS)[number];
@@ -35,14 +37,15 @@ const textList = z.array(z.string().trim().min(1, "El texto no puede estar vací
 export const exerciseSeedSchema = z.object({
   slug,
   name: z.string().trim().min(1, "El nombre es obligatorio").max(80),
-  primaryMuscles: textList.min(1, "Indica al menos un músculo principal"),
-  secondaryMuscles: textList.default([]),
+  primaryMuscles: z.array(z.enum(MUSCLE_GROUPS)).min(1, "Indica al menos un músculo principal"),
+  secondaryMuscles: z.array(z.enum(MUSCLE_GROUPS)).default([]),
   equipment: z.array(z.enum(EQUIPMENT)).default([]),
   place: z.enum(EXERCISE_PLACES),
   level: z.enum(EXERCISE_LEVELS),
   tips: textList.min(1, "Agrega al menos un consejo de ejecución"),
   contraindications: textList.default([]),
   equivalenceGroup: z.enum(EQUIVALENCE_GROUPS),
+  measure: z.enum(EXERCISE_MEASURES).default("reps"),
   regressionSlug: slug.optional(),
   isComplex: z.boolean().default(false),
   source: z

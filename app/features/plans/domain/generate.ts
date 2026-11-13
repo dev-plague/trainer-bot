@@ -1,19 +1,20 @@
+import type { Equipment } from "~/features/exercises/domain/equipment";
 import type {
-  Equipment,
   EquivalenceGroup,
   ExerciseLevel,
   ExercisePlace,
-} from "~/features/exercises";
+} from "~/features/exercises/domain/exercise-seed";
+import type { ExerciseMeasure, MuscleGroup } from "~/features/exercises/domain/muscles";
 import {
   ENGINE_VERSION,
   type GeneratedPlan,
   type PlanDay,
-  type PlanDayCategory,
   type PlanExercisePrescription,
   type PlanRequest,
   type PlanWarning,
 } from "./contract";
 import { type EffectiveProfile, profileFor } from "./profiles";
+import { type DaySlot, type DayTemplate, templatesForDays } from "./templates";
 
 /** Lo mínimo que el motor necesita de un ejercicio. Sin base de datos. */
 export type CandidateExercise = {
@@ -22,6 +23,8 @@ export type CandidateExercise = {
   level: ExerciseLevel;
   equipment: Equipment[];
   equivalenceGroup: EquivalenceGroup;
+  primaryMuscles: MuscleGroup[];
+  measure: ExerciseMeasure;
   contraindications: string[];
   isComplex: boolean;
 };
@@ -31,39 +34,7 @@ const COOLDOWN_MINUTES = 5;
 const SECONDS_PER_REP = 3;
 const MIN_WORK_MINUTES = 10;
 const MAX_EXERCISES_PER_DAY = 8;
-const MAX_CARDIO_MINUTES = 40;
-
-const FULL_BODY: readonly EquivalenceGroup[] = ["push", "pull", "squat", "hinge", "core"];
-const UPPER: readonly EquivalenceGroup[] = ["push", "pull", "core"];
-const LOWER: readonly EquivalenceGroup[] = ["squat", "hinge", "lunge"];
-const STRENGTH_GROUPS: readonly EquivalenceGroup[] = [
-  "push",
-  "pull",
-  "squat",
-  "lunge",
-  "hinge",
-  "core",
-];
-
-function dayCategories(days: number): PlanDayCategory[] {
-  if (days <= 3) return Array.from({ length: days }, () => "full_body");
-  if (days === 4) return ["upper", "lower", "upper", "lower"];
-
-  return ["upper", "lower", "upper", "lower", "cardio"];
-}
-
-function patternsFor(category: PlanDayCategory): readonly EquivalenceGroup[] {
-  switch (category) {
-    case "full_body":
-      return FULL_BODY;
-    case "upper":
-      return UPPER;
-    case "lower":
-      return LOWER;
-    case "cardio":
-      return [];
-  }
-}
+const MAX_CARDIO_MINUTES = 20;
 
 export function generatePlan(
   request: PlanRequest,
@@ -71,9 +42,37 @@ export function generatePlan(
 ): GeneratedPlan {
   const profile = profileFor(request.goal, request.level);
   const warnings: PlanWarning[] = [];
-  const days = dayCategories(request.daysPerWeek).map((category, dayIndex) =>
-    buildDay(dayIndex, category, request, profile, catalog, warnings),
+  const templates = templatesForDays(request.daysPerWeek);
+  const hasDedicatedCardio = templates.some((template) => template.category === "cardio");
+  const cardioBudget = Math.max(
+    0,
+    profile.cardio.sessionsPerWeek.max - (hasDedicatedCardio ? 1 : 0),
   );
+  let cardioSessions = 0;
+
+  const days = templates.map((template, dayIndex) => {
+    const allowCardio = template.category !== "cardio" && cardioSessions < cardioBudget;
+    const day = buildDay(
+      dayIndex,
+      // En 4 días, A y B del mismo bloque comparten índice de variante.
+      request.daysPerWeek === 4 ? Math.floor(dayIndex / 2) : dayIndex,
+      template,
+      request,
+      profile,
+      catalog,
+      warnings,
+      allowCardio,
+    );
+
+    if (
+      template.category === "cardio" ||
+      day.exercises.some((item) => item.prescription.kind === "cardio")
+    ) {
+      cardioSessions += 1;
+    }
+
+    return day;
+  });
 
   return {
     engineVersion: ENGINE_VERSION,
@@ -87,11 +86,13 @@ export function generatePlan(
 
 function buildDay(
   dayIndex: number,
-  category: PlanDayCategory,
+  variantIndex: number,
+  template: DayTemplate,
   request: PlanRequest,
   profile: EffectiveProfile,
   catalog: readonly CandidateExercise[],
   warnings: PlanWarning[],
+  allowCardio: boolean,
 ): PlanDay {
   const budgetSeconds = Math.max(
     0,
@@ -100,17 +101,32 @@ function buildDay(
   const pool = catalog.filter((exercise) => isExerciseAvailable(exercise, request));
 
   const exercises =
-    category === "cardio"
+    template.category === "cardio"
       ? buildCardioDay(pool, request, profile, budgetSeconds, warnings)
-      : buildStrengthDay(pool, request, profile, budgetSeconds, category, warnings);
+      : buildStrengthDay(
+          pool,
+          request,
+          profile,
+          budgetSeconds,
+          template,
+          variantIndex,
+          warnings,
+          allowCardio,
+        );
 
-  const workMinutes = estimateDayWorkMinutes({ dayIndex, category, isRest: false, exercises });
+  const day: PlanDay = {
+    dayIndex,
+    category: template.category,
+    isRest: false,
+    exercises,
+  };
+  const workMinutes = estimateDayWorkMinutes(day);
 
   if (workMinutes < MIN_WORK_MINUTES) {
     warnings.push({ code: "session_too_short", detail: String(dayIndex + 1) });
   }
 
-  return { dayIndex, category, isRest: false, exercises };
+  return day;
 }
 
 function buildStrengthDay(
@@ -118,33 +134,27 @@ function buildStrengthDay(
   request: PlanRequest,
   profile: EffectiveProfile,
   budgetSeconds: number,
-  category: PlanDayCategory,
+  template: DayTemplate,
+  variantIndex: number,
   warnings: PlanWarning[],
+  allowCardio: boolean,
 ): PlanExercisePrescription[] {
   const exercises: PlanExercisePrescription[] = [];
   const used = new Set<string>();
   let usedSeconds = 0;
 
-  const required = patternsFor(category);
-  const optional = STRENGTH_GROUPS.filter((group) => !required.includes(group));
-
-  for (const pattern of [...required, ...optional]) {
+  for (const slot of template.slots) {
     if (exercises.length >= MAX_EXERCISES_PER_DAY) break;
 
-    const exercise = pickExercise(pattern, pool, used, request.level);
+    const exercise = pickExercise(slot, pool, used, request.level, variantIndex);
 
     if (!exercise) {
-      if (required.includes(pattern)) {
-        warnings.push({ code: "missing_pattern", detail: pattern });
-      }
+      warnings.push({ code: "missing_pattern", detail: slot.pattern });
 
       continue;
     }
 
-    const prescription =
-      pattern === "mobility"
-        ? mobilityPrescription(budgetSeconds - usedSeconds)
-        : fitStrength(profile, budgetSeconds - usedSeconds);
+    const prescription = fitPrescription(exercise, profile, budgetSeconds - usedSeconds);
 
     if (!prescription) continue;
 
@@ -153,7 +163,7 @@ function buildStrengthDay(
     usedSeconds += prescriptionSeconds(prescription);
   }
 
-  const cardio = pickExercise("cardio", pool, used, request.level);
+  const cardio = allowCardio ? pickCardio(pool, used, request.level, variantIndex) : null;
   const remainingMinutes = Math.floor((budgetSeconds - usedSeconds) / 60);
 
   if (cardio && remainingMinutes >= MIN_WORK_MINUTES) {
@@ -175,7 +185,7 @@ function buildCardioDay(
   budgetSeconds: number,
   warnings: PlanWarning[],
 ): PlanExercisePrescription[] {
-  const exercise = pickExercise("cardio", pool, new Set(), request.level);
+  const exercise = pickCardio(pool, new Set(), request.level, 0);
 
   if (!exercise) {
     warnings.push({ code: "missing_pattern", detail: "cardio" });
@@ -183,7 +193,7 @@ function buildCardioDay(
     return [];
   }
 
-  const minutes = Math.min(MAX_CARDIO_MINUTES, Math.floor(budgetSeconds / 60));
+  const minutes = Math.min(40, Math.floor(budgetSeconds / 60));
 
   if (minutes < MIN_WORK_MINUTES) {
     return [];
@@ -197,36 +207,34 @@ function buildCardioDay(
   ];
 }
 
-function mobilityPrescription(
-  remainingSeconds: number,
-): Extract<PlanExercisePrescription["prescription"], { kind: "mobility" }> | null {
-  const sets = 2;
-  const reps = 8;
-  const cost = sets * reps * SECONDS_PER_REP;
-
-  if (cost > remainingSeconds) return null;
-
-  return { kind: "mobility", sets, reps };
-}
-
-function fitStrength(
+function fitPrescription(
+  exercise: CandidateExercise,
   profile: EffectiveProfile,
   remainingSeconds: number,
-): Extract<PlanExercisePrescription["prescription"], { kind: "strength" }> | null {
-  const reps = Math.round((profile.reps.min + profile.reps.max) / 2);
+): PlanExercisePrescription["prescription"] | null {
+  if (exercise.measure === "seconds") {
+    const seconds = profile.isometricSeconds;
+    const restSeconds = Math.min(profile.restSeconds.min, 45);
+
+    for (const sets of [profile.sets.max, profile.sets.min]) {
+      const cost = sets * (seconds.max + restSeconds);
+
+      if (cost <= remainingSeconds) {
+        return { kind: "isometric", sets, seconds, restSeconds };
+      }
+    }
+
+    return null;
+  }
+
+  const reps = profile.reps;
+  const restSeconds = profile.restSeconds.max;
 
   for (const sets of [profile.sets.max, profile.sets.min]) {
-    const restSeconds = profile.restSeconds.max;
-    const cost = sets * (reps * SECONDS_PER_REP + restSeconds);
+    const cost = sets * (reps.max * SECONDS_PER_REP + restSeconds);
 
     if (cost <= remainingSeconds) {
-      return {
-        kind: "strength",
-        sets,
-        reps,
-        rir: profile.rir.max,
-        restSeconds,
-      };
+      return { kind: "strength", sets, reps, rir: profile.rir.max, restSeconds };
     }
   }
 
@@ -234,19 +242,42 @@ function fitStrength(
 }
 
 function pickExercise(
-  group: EquivalenceGroup,
+  slot: DaySlot,
   pool: readonly CandidateExercise[],
   used: ReadonlySet<string>,
   level: ExerciseLevel,
+  dayIndex: number,
 ): CandidateExercise | null {
-  const candidates = pool
-    .filter((exercise) => exercise.equivalenceGroup === group && !used.has(exercise.slug))
-    .sort(
-      (a, b) =>
-        levelScore(a.level, level) - levelScore(b.level, level) || a.slug.localeCompare(b.slug),
-    );
+  const candidates = pool.filter(
+    (exercise) => exercise.equivalenceGroup === slot.pattern && !used.has(exercise.slug),
+  );
 
-  return candidates[0] ?? null;
+  const focused = candidates.filter((exercise) =>
+    exercise.primaryMuscles.some((muscle) => slot.focus.includes(muscle)),
+  );
+  const poolForSlot = focused.length > 0 ? focused : candidates;
+
+  const ranked = [...poolForSlot].sort(
+    (a, b) =>
+      levelScore(a.level, level) - levelScore(b.level, level) || a.slug.localeCompare(b.slug),
+  );
+  const best = ranked[0];
+
+  if (!best) return null;
+
+  const bestScore = levelScore(best.level, level);
+  const tier = ranked.filter((exercise) => levelScore(exercise.level, level) === bestScore);
+
+  return tier[dayIndex % tier.length] ?? best;
+}
+
+function pickCardio(
+  pool: readonly CandidateExercise[],
+  used: ReadonlySet<string>,
+  level: ExerciseLevel,
+  dayIndex: number,
+): CandidateExercise | null {
+  return pickExercise({ pattern: "cardio", focus: [] }, pool, used, level, dayIndex);
 }
 
 function levelScore(exerciseLevel: ExerciseLevel, requestLevel: ExerciseLevel): number {
@@ -286,6 +317,9 @@ function placeAllows(exercise: CandidateExercise, place: ExercisePlace): boolean
   if (exercise.equivalenceGroup === "cardio") return true;
   if (exercise.place === place) return true;
 
+  // En un gimnasio hay espacio y equipo: valen los ejercicios de casa.
+  if (place === "gym" && exercise.place === "home") return true;
+
   // Los ejercicios de peso corporal de casa valen en cualquier lugar.
   return exercise.place === "home" && exercise.equipment.length === 0;
 }
@@ -321,7 +355,11 @@ function normalize(value: string): string {
 
 function prescriptionSeconds(prescription: PlanExercisePrescription["prescription"]): number {
   if (prescription.kind === "strength") {
-    return prescription.sets * (prescription.reps * SECONDS_PER_REP + prescription.restSeconds);
+    return prescription.sets * (prescription.reps.max * SECONDS_PER_REP + prescription.restSeconds);
+  }
+
+  if (prescription.kind === "isometric") {
+    return prescription.sets * (prescription.seconds.max + prescription.restSeconds);
   }
 
   if (prescription.kind === "cardio") return prescription.minutes * 60;
