@@ -41,7 +41,12 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function ExerciseDetail() {
   const exercise = useLoaderData<typeof loader>();
-  const kind = exercise.measure === "seconds" ? "isometric" : "strength";
+  const kind =
+    exercise.equivalenceGroup === "mobility"
+      ? "mobility"
+      : exercise.measure === "seconds"
+        ? "isometric"
+        : "strength";
 
   return (
     <div className="space-y-6">
@@ -54,6 +59,11 @@ export default function ExerciseDetail() {
           <Badge variant="outline">{exercisesText.places[exercise.place]}</Badge>
           <Badge variant="outline">{exercisesText.levels[exercise.level]}</Badge>
           <ExerciseTypeBadge kind={kind} />
+          {exercise.mobilityPhase ? (
+            <Badge variant="secondary">
+              {exercisesText.mobilityPhases[exercise.mobilityPhase]}
+            </Badge>
+          ) : null}
         </div>
       </PageHeader>
 

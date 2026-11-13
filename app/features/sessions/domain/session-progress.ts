@@ -9,7 +9,9 @@ export function totalSetsFor(prescription: Prescription): number {
 
 /** Segundos de descanso que prescribe el ejercicio; 0 si no aplica. */
 export function restSecondsFor(prescription: Prescription): number {
-  return prescription.kind === "strength" || prescription.kind === "isometric"
+  return prescription.kind === "strength" ||
+    prescription.kind === "isometric" ||
+    prescription.kind === "mobility"
     ? prescription.restSeconds
     : 0;
 }

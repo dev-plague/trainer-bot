@@ -4,6 +4,7 @@ export {
   completeSet,
   getCompletedDayIndices,
   getInProgressSessionForUser,
+  skipCurrentExercise,
 } from "./data/session-actions";
 export type { SessionExercise, SessionState } from "./data/session-state";
 export { getSessionState } from "./data/session-state";

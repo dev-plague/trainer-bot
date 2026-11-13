@@ -9,6 +9,10 @@ export type ExercisePlace = (typeof EXERCISE_PLACES)[number];
 export const EXERCISE_LEVELS = ["beginner", "intermediate", "advanced"] as const;
 export type ExerciseLevel = (typeof EXERCISE_LEVELS)[number];
 
+/** Bloque de la sesión al que pertenece una entrada de movilidad. */
+export const MOBILITY_PHASES = ["warmup", "cooldown"] as const;
+export type MobilityPhase = (typeof MOBILITY_PHASES)[number];
+
 /**
  * Grupos que el modo flexible puede intercambiar. El nombre describe el patrón,
  * no el músculo: dos ejercicios del mismo grupo cumplen la misma función.
@@ -45,6 +49,8 @@ export const exerciseSeedSchema = z.object({
   tips: textList.min(1, "Agrega al menos un consejo de ejecución"),
   contraindications: textList.default([]),
   equivalenceGroup: z.enum(EQUIVALENCE_GROUPS),
+  /** Solo la movilidad declara fase; el resto del catálogo no la usa. */
+  mobilityPhase: z.enum(MOBILITY_PHASES).optional(),
   measure: z.enum(EXERCISE_MEASURES).default("reps"),
   regressionSlug: slug.optional(),
   isComplex: z.boolean().default(false),
@@ -102,6 +108,14 @@ export function validateSeed(raw: readonly unknown[]): SeedValidationResult {
 
     if (exercise.isComplex && !exercise.regressionSlug) {
       throw new Error(`El ejercicio complejo ${exercise.slug} necesita una regresión`);
+    }
+
+    if (exercise.equivalenceGroup === "mobility" && !exercise.mobilityPhase) {
+      throw new Error(`La movilidad ${exercise.slug} necesita fase warmup o cooldown`);
+    }
+
+    if (exercise.equivalenceGroup !== "mobility" && exercise.mobilityPhase) {
+      throw new Error(`Solo la movilidad puede declarar fase: ${exercise.slug}`);
     }
   }
 

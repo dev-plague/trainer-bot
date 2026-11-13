@@ -1,4 +1,4 @@
-import type { EquivalenceGroup } from "~/features/exercises/domain/exercise-seed";
+import type { EquivalenceGroup, MobilityPhase } from "~/features/exercises/domain/exercise-seed";
 import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 import type { CandidateExercise, ExerciseContext } from "./generate";
 import { isExerciseAvailable } from "./generate";
@@ -6,6 +6,7 @@ import { isExerciseAvailable } from "./generate";
 export type SubstitutionTarget = {
   slug: string;
   equivalenceGroup: EquivalenceGroup;
+  mobilityPhase: MobilityPhase | null;
 };
 
 /**
@@ -23,6 +24,7 @@ export function availableSubstitutes(
       (exercise) =>
         exercise.slug !== current.slug &&
         exercise.equivalenceGroup === current.equivalenceGroup &&
+        exercise.mobilityPhase === current.mobilityPhase &&
         (focus === undefined || exercise.primaryMuscles.some((muscle) => focus.includes(muscle))) &&
         isExerciseAvailable(exercise, context),
     )

@@ -48,6 +48,18 @@ describe("validateSeed", () => {
     );
   });
 
+  it("exige fase de calentamiento o enfriamiento a la movilidad", () => {
+    expect(() => validateSeed([{ ...base, equivalenceGroup: "mobility" }])).toThrow(
+      /necesita fase warmup o cooldown/,
+    );
+  });
+
+  it("rechaza una fase en un ejercicio que no es movilidad", () => {
+    expect(() => validateSeed([{ ...base, mobilityPhase: "warmup" }])).toThrow(
+      /Solo la movilidad puede declarar fase/,
+    );
+  });
+
   it("agrupa por equivalencia", () => {
     const { byGroup } = validateSeed([
       base,

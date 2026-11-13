@@ -35,6 +35,7 @@ export async function getSubstitutionView(
       slug: exercise.slug,
       name: exercise.name,
       group: exercise.equivalenceGroup,
+      mobilityPhase: exercise.mobilityPhase,
       category: planDay.category,
       mode: plan.mode,
       place: plan.place,
@@ -55,7 +56,7 @@ export async function getSubstitutionView(
 
   const catalog = await loadCandidateExercises();
   const candidates = availableSubstitutes(
-    { slug: row.slug, equivalenceGroup: row.group },
+    { slug: row.slug, equivalenceGroup: row.group, mobilityPhase: row.mobilityPhase },
     catalog,
     {
       place: row.place,

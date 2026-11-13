@@ -8,7 +8,14 @@ import type {
 } from "~/features/exercises";
 import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 import { type PlanRequest, planRequestSchema } from "./contract";
-import { type CandidateExercise, estimateDayWorkMinutes, generatePlan } from "./generate";
+import {
+  type CandidateExercise,
+  COOLDOWN_MINUTES,
+  estimateDayWorkMinutes,
+  estimateMainWorkMinutes,
+  generatePlan,
+  WARMUP_MINUTES,
+} from "./generate";
 import { profileFor } from "./profiles";
 
 type CandidateOverrides = Partial<Omit<CandidateExercise, "slug" | "equivalenceGroup">> & {
@@ -17,7 +24,7 @@ type CandidateOverrides = Partial<Omit<CandidateExercise, "slug" | "equivalenceG
 };
 
 function candidate(overrides: CandidateOverrides): CandidateExercise {
-  const { primaryMuscles, measure, ...rest } = overrides;
+  const { primaryMuscles, measure, mobilityPhase, ...rest } = overrides;
 
   return {
     place: "home" as ExercisePlace,
@@ -26,6 +33,7 @@ function candidate(overrides: CandidateOverrides): CandidateExercise {
     contraindications: [],
     isComplex: false,
     ...rest,
+    mobilityPhase: mobilityPhase ?? null,
     primaryMuscles: primaryMuscles ?? ([] as MuscleGroup[]),
     measure: measure ?? "reps",
   };
@@ -152,9 +160,61 @@ const catalog: CandidateExercise[] = [
     primaryMuscles: ["quads", "calves"],
   }),
   candidate({
-    slug: "movilidad-cadera",
+    slug: "movilidad-de-cadera",
     equivalenceGroup: "mobility",
+    mobilityPhase: "warmup",
+    measure: "seconds",
     primaryMuscles: ["glutes"],
+    contraindications: ["Dolor agudo de cadera"],
+  }),
+  candidate({
+    slug: "movilidad-de-tobillo",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "warmup",
+    measure: "seconds",
+    primaryMuscles: ["calves"],
+  }),
+  candidate({
+    slug: "movilidad-de-hombro",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "warmup",
+    measure: "seconds",
+    primaryMuscles: ["shoulders"],
+  }),
+  candidate({
+    slug: "movilidad-de-columna-toracica",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "warmup",
+    measure: "seconds",
+    primaryMuscles: ["back"],
+  }),
+  candidate({
+    slug: "estiramiento-de-isquiotibiales",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "cooldown",
+    measure: "seconds",
+    primaryMuscles: ["hamstrings"],
+  }),
+  candidate({
+    slug: "estiramiento-de-gemelos",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "cooldown",
+    measure: "seconds",
+    primaryMuscles: ["calves"],
+  }),
+  candidate({
+    slug: "estiramiento-de-pecho",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "cooldown",
+    measure: "seconds",
+    primaryMuscles: ["chest"],
+  }),
+  candidate({
+    slug: "estiramiento-de-espalda",
+    equivalenceGroup: "mobility",
+    mobilityPhase: "cooldown",
+    measure: "seconds",
+    primaryMuscles: ["back"],
   }),
 ];
 
@@ -198,8 +258,118 @@ describe("generatePlan", () => {
       const input = request({ sessionMinutes: 45, daysPerWeek: days });
 
       for (const day of generatePlan(input, catalog).days) {
-        expect(estimateDayWorkMinutes(day) + 10).toBeLessThanOrEqual(input.sessionMinutes + 0.01);
+        expect(estimateDayWorkMinutes(day)).toBeLessThanOrEqual(input.sessionMinutes + 0.01);
+        expect(estimateDayWorkMinutes(day) - estimateMainWorkMinutes(day)).toBeCloseTo(
+          WARMUP_MINUTES + COOLDOWN_MINUTES,
+          5,
+        );
       }
+    }
+  });
+
+  it("todo día abre con calentamiento y cierra con enfriamiento", () => {
+    const phaseBySlug = new Map(catalog.map((exercise) => [exercise.slug, exercise.mobilityPhase]));
+
+    for (const days of [2, 3, 4, 5]) {
+      for (const day of generatePlan(request({ daysPerWeek: days }), catalog).days) {
+        const first = day.exercises[0];
+        const last = day.exercises.at(-1);
+
+        expect(first?.prescription.kind).toBe("mobility");
+        expect(last?.prescription.kind).toBe("mobility");
+        expect(phaseBySlug.get(first?.exerciseSlug ?? "")).toBe("warmup");
+        expect(phaseBySlug.get(last?.exerciseSlug ?? "")).toBe("cooldown");
+        expect(
+          day.exercises.filter((item) => phaseBySlug.get(item.exerciseSlug) === "warmup"),
+        ).toHaveLength(2);
+        expect(
+          day.exercises.filter((item) => phaseBySlug.get(item.exerciseSlug) === "cooldown"),
+        ).toHaveLength(2);
+      }
+    }
+  });
+
+  it("un día de pierna calienta cadera y tobillo", () => {
+    const plan = generatePlan(request({ daysPerWeek: 4 }), catalog);
+    const lowerDays = plan.days.filter((day) => day.category === "lower");
+
+    expect(lowerDays).toHaveLength(2);
+
+    for (const day of lowerDays) {
+      const warmup = day.exercises
+        .filter((item) => item.prescription.kind === "mobility")
+        .slice(0, 2)
+        .map((item) => item.exerciseSlug);
+
+      expect(warmup).toEqual(["movilidad-de-cadera", "movilidad-de-tobillo"]);
+    }
+  });
+
+  it("un día de torso calienta hombro y columna torácica", () => {
+    const plan = generatePlan(request({ daysPerWeek: 4 }), catalog);
+    const upperDays = plan.days.filter((day) => day.category === "upper");
+
+    expect(upperDays).toHaveLength(2);
+
+    for (const day of upperDays) {
+      const warmup = day.exercises.slice(0, 2).map((item) => item.exerciseSlug);
+
+      expect(warmup).toEqual(["movilidad-de-hombro", "movilidad-de-columna-toracica"]);
+    }
+  });
+
+  it("un día de cuerpo completo combina cadera y hombro al calentar", () => {
+    const day = generatePlan(request({ daysPerWeek: 2 }), catalog).days[0];
+    const mobility = day?.exercises.filter((item) => item.prescription.kind === "mobility") ?? [];
+
+    expect(mobility.slice(0, 2).map((item) => item.exerciseSlug)).toEqual([
+      "movilidad-de-cadera",
+      "movilidad-de-hombro",
+    ]);
+    expect(mobility.slice(2).map((item) => item.exerciseSlug)).toEqual([
+      "estiramiento-de-isquiotibiales",
+      "estiramiento-de-pecho",
+    ]);
+  });
+
+  it("excluye la movilidad contraindicada por las limitaciones declaradas", () => {
+    const plan = generatePlan(
+      request({ daysPerWeek: 2, limitations: "me duele la cadera" }),
+      catalog,
+    );
+    const mobilitySlugs = plan.days
+      .flatMap((day) => day.exercises)
+      .filter((item) => item.prescription.kind === "mobility")
+      .map((item) => item.exerciseSlug);
+
+    expect(mobilitySlugs).not.toContain("movilidad-de-cadera");
+    expect(mobilitySlugs).toContain("movilidad-de-tobillo");
+  });
+
+  it("ningún paso de movilidad requiere equipo", () => {
+    const equipmentBySlug = new Map(catalog.map((exercise) => [exercise.slug, exercise.equipment]));
+
+    for (const day of generatePlan(request({ daysPerWeek: 5 }), catalog).days) {
+      for (const item of day.exercises) {
+        if (item.prescription.kind !== "mobility") continue;
+
+        expect(equipmentBySlug.get(item.exerciseSlug)).toEqual([]);
+      }
+    }
+  });
+
+  it("con poco tiempo conserva la movilidad y recorta el trabajo principal", () => {
+    const input = request({ sessionMinutes: 20, daysPerWeek: 3 });
+    const plan = generatePlan(input, catalog);
+
+    for (const day of plan.days) {
+      const mobility = day.exercises.filter((item) => item.prescription.kind === "mobility");
+
+      expect(mobility).toHaveLength(4);
+      expect(estimateMainWorkMinutes(day)).toBeLessThanOrEqual(
+        input.sessionMinutes - WARMUP_MINUTES - COOLDOWN_MINUTES + 0.01,
+      );
+      expect(estimateDayWorkMinutes(day)).toBeLessThanOrEqual(input.sessionMinutes + 0.01);
     }
   });
 
@@ -282,7 +452,7 @@ describe("generatePlan", () => {
       "upper",
       "cardio",
     ]);
-    expect(plan.days[4]?.exercises[0]?.prescription.kind).toBe("cardio");
+    expect(plan.days[4]?.exercises.some((item) => item.prescription.kind === "cardio")).toBe(true);
   });
 
   it("no supera las sesiones de cardio del perfil", () => {

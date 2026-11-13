@@ -91,6 +91,60 @@ export async function completeSet(userId: string, sessionId: string): Promise<Co
   };
 }
 
+export type SkipStepResult = { ok: true; sessionDone: boolean; restSeconds: 0 } | { ok: false };
+
+/**
+ * Omite el paso actual si es movilidad (calentamiento o enfriamiento). El
+ * bloque sigue en el plan, pero la persona puede saltárselo.
+ */
+export async function skipCurrentExercise(
+  userId: string,
+  sessionId: string,
+): Promise<SkipStepResult> {
+  const session = await findOwnedSession(userId, sessionId);
+
+  if (session?.status !== "in_progress") return { ok: false };
+
+  const [current] = await db
+    .select({
+      logId: exerciseLog.id,
+      mobilityPhase: exercise.mobilityPhase,
+    })
+    .from(exerciseLog)
+    .innerJoin(exercise, eq(exercise.id, exerciseLog.exerciseId))
+    .where(and(eq(exerciseLog.workoutSessionId, sessionId), eq(exerciseLog.status, "pending")))
+    .orderBy(asc(exerciseLog.position))
+    .limit(1);
+
+  if (!current?.mobilityPhase) return { ok: false };
+
+  let sessionDone = false;
+
+  await db.transaction(async (tx) => {
+    await tx
+      .update(exerciseLog)
+      .set({ status: "skipped", completedAt: new Date() })
+      .where(eq(exerciseLog.id, current.logId));
+
+    const [remaining] = await tx
+      .select({ id: exerciseLog.id })
+      .from(exerciseLog)
+      .where(and(eq(exerciseLog.workoutSessionId, sessionId), eq(exerciseLog.status, "pending")))
+      .limit(1);
+
+    if (!remaining) {
+      sessionDone = true;
+
+      await tx
+        .update(workoutSession)
+        .set({ status: "completed", completedAt: new Date() })
+        .where(eq(workoutSession.id, sessionId));
+    }
+  });
+
+  return { ok: true, sessionDone, restSeconds: 0 };
+}
+
 /**
  * Cambia el ejercicio actual por su regresión. Solo si es complejo, tiene
  * regresión y la sesión sigue en curso.

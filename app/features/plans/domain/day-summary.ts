@@ -42,7 +42,12 @@ export function samePrescription(a: ExercisePrescription, b: ExercisePrescriptio
     case "mobility": {
       const other = b as typeof a;
 
-      return a.sets === other.sets && a.reps === other.reps;
+      return (
+        a.sets === other.sets &&
+        a.seconds.min === other.seconds.min &&
+        a.seconds.max === other.seconds.max &&
+        a.restSeconds === other.restSeconds
+      );
     }
   }
 }

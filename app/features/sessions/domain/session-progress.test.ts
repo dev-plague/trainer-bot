@@ -6,6 +6,7 @@ import {
   isRestOver,
   restElapsedRatio,
   restRemainingSeconds,
+  restSecondsFor,
   sessionProgress,
   setProgress,
   startRestTimer,
@@ -31,6 +32,13 @@ const cardio = {
   kind: "cardio",
   minutes: 20,
   intensity: "moderate",
+} as const;
+
+const mobility = {
+  kind: "mobility",
+  sets: 2,
+  seconds: { min: 60, max: 60 },
+  restSeconds: 15,
 } as const;
 
 function restTimer(seconds: number, startedAt = 0) {
@@ -68,6 +76,11 @@ describe("setProgress", () => {
     expect(totalSetsFor(cardio)).toBe(1);
     expect(totalSetsFor(strength)).toBe(2);
     expect(setProgress(0, totalSetsFor(cardio)).isLastSet).toBe(true);
+  });
+
+  it("cuenta las series de movilidad y su descanso", () => {
+    expect(totalSetsFor(mobility)).toBe(2);
+    expect(restSecondsFor(mobility)).toBe(15);
   });
 });
 

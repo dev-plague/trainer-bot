@@ -1,4 +1,4 @@
-import type { Equipment } from "~/features/exercises";
+import type { Equipment, MobilityPhase } from "~/features/exercises";
 import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 
 export const exercisesText = {
@@ -27,6 +27,10 @@ export const exercisesText = {
     calves: "Gemelos",
     core: "Core",
   } satisfies Record<MuscleGroup, string>,
+  mobilityPhases: {
+    warmup: "Calentamiento",
+    cooldown: "Enfriamiento",
+  } satisfies Record<MobilityPhase, string>,
   tips: "Cómo hacerlo",
   contraindications: "Ten cuidado si tienes",
   regression: "Si te cuesta o no te sientes cómodo, prueba esta versión",

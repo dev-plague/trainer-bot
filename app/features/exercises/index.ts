@@ -5,6 +5,7 @@ export type {
   EquivalenceGroup,
   ExerciseLevel,
   ExercisePlace,
+  MobilityPhase,
   SeedExercise,
 } from "./domain/exercise-seed";
 export {
@@ -13,6 +14,8 @@ export {
   EXERCISE_PLACES,
   exerciseSeedSchema,
   exerciseSlugSchema,
+  MOBILITY_PHASES,
   validateSeed,
 } from "./domain/exercise-seed";
-export type { ExerciseMeasure } from "./domain/muscles";
+export type { BodyRegion, ExerciseMeasure } from "./domain/muscles";
+export { bodyRegionOfMuscle } from "./domain/muscles";

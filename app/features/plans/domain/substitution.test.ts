@@ -13,7 +13,7 @@ const context: ExerciseContext = {
 function candidate(
   overrides: Partial<CandidateExercise> & Pick<CandidateExercise, "slug">,
 ): CandidateExercise {
-  const { primaryMuscles, measure, ...rest } = overrides;
+  const { primaryMuscles, measure, mobilityPhase, ...rest } = overrides;
 
   return {
     place: "home",
@@ -23,12 +23,17 @@ function candidate(
     contraindications: [],
     isComplex: false,
     ...rest,
+    mobilityPhase: mobilityPhase ?? null,
     primaryMuscles: primaryMuscles ?? [],
     measure: measure ?? "reps",
   };
 }
 
-const current = { slug: "sentadilla", equivalenceGroup: "squat" as const };
+const current = {
+  slug: "sentadilla",
+  equivalenceGroup: "squat" as const,
+  mobilityPhase: null,
+};
 
 describe("availableSubstitutes", () => {
   it("solo devuelve ejercicios del mismo grupo y distintos al actual", () => {
@@ -87,6 +92,29 @@ describe("availableSubstitutes", () => {
     expect(
       availableSubstitutes(current, catalog, context, ["quads"]).map((item) => item.slug),
     ).toEqual(["sentadilla-goblet"]);
+  });
+
+  it("no cambia un calentamiento por un enfriamiento", () => {
+    const catalog = [
+      candidate({
+        slug: "movilidad-cadera",
+        equivalenceGroup: "mobility",
+        mobilityPhase: "warmup",
+      }),
+      candidate({
+        slug: "estiramiento-isquios",
+        equivalenceGroup: "mobility",
+        mobilityPhase: "cooldown",
+      }),
+    ];
+
+    expect(
+      availableSubstitutes(
+        { slug: "otra-movilidad", equivalenceGroup: "mobility", mobilityPhase: "warmup" },
+        catalog,
+        context,
+      ).map((item) => item.slug),
+    ).toEqual(["movilidad-cadera"]);
   });
 
   it("devuelve una lista ordenada y estable", () => {
