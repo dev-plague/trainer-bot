@@ -174,6 +174,7 @@ Sin `source` no hay ejercicio. El seed es un archivo versionado en git.
 | `mode` | enum: `strict`, `flexible` | |
 | `inputs_snapshot` | jsonb | Copia de las entradas del formulario |
 | `engine_version` | text | Permite saber con qué reglas se generó |
+| `warnings` | jsonb | Avisos tipados del motor (`missing_pattern`, `session_too_short`…) |
 | `created_at` | timestamptz | |
 
 `inputs_snapshot` y `engine_version` son la decisión importante: un plan es un documento
@@ -198,14 +199,11 @@ legibles.
 | `plan_day_id` | text FK | `ON DELETE CASCADE` |
 | `exercise_id` | text FK → `exercise` | `ON DELETE RESTRICT`: el catálogo no se borra |
 | `position` | integer | Orden dentro del día |
-| `sets` | integer | |
-| `reps` | integer | |
-| `intensity_type` | enum: `rir`, `rpe`, `none` | **Nunca kg** |
-| `intensity_value` | integer | p. ej. RIR 2 o RPE 7 |
-| `rest_seconds` | integer | |
-| `notes` | text | |
+| `prescription` | jsonb | Unión discriminada: fuerza (series/reps/RIR/descanso), cardio (minutos) o movilidad |
 
-No existe ninguna columna de peso ni de carga. Es una decisión de diseño, no un olvido.
+La prescripción va en `jsonb` porque tiene tres formas distintas; llenar la tabla de columnas
+nulas por tipo no aportaba nada. No existe ninguna columna de peso ni de carga: es una
+decisión de diseño, no un olvido.
 
 ### `workout_session`
 

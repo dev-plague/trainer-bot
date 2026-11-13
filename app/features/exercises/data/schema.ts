@@ -8,6 +8,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
+import type { Equipment } from "../domain/equipment";
 import type { EquivalenceGroup, ExerciseLevel, ExercisePlace } from "../domain/exercise-seed";
 
 export const exercisePlaceEnum = pgEnum("exercise_place", ["home", "gym", "outdoor"]);
@@ -21,7 +22,7 @@ export const exercise = pgTable(
     name: text("name").notNull(),
     primaryMuscles: text("primary_muscles").array().notNull(),
     secondaryMuscles: text("secondary_muscles").array().notNull().default([]),
-    equipment: text("equipment").array().notNull().default([]),
+    equipment: text("equipment").array().$type<Equipment[]>().notNull().default([]),
     place: exercisePlaceEnum("place").$type<ExercisePlace>().notNull(),
     level: exerciseLevelEnum("level").$type<ExerciseLevel>().notNull(),
     tips: text("tips").array().notNull(),
