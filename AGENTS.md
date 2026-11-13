@@ -69,6 +69,8 @@ Reglas:
 - El IMC solo se calcula para mayores de 18 años y nunca se presenta como cifra "ideal" única.
 - Todo ejercicio del catálogo requiere el campo `fuente`. No inventes ejercicios ni
   afirmaciones de efectividad sin respaldo.
+- Los perfiles del motor de planes son datos tipados con `fuente`; no se cambian sin un PR
+  que cite la fuente, actualice `docs/product/motor-de-planes.md` y suba `engine_version`.
 - Los saludos y mensajes usan el **nombre preferido** que la persona eligió en el onboarding,
   no el nombre de la cuenta. El saludo según la hora se calcula en el cliente.
 - Los textos de la interfaz van en `app/content/`, en español, con tono cercano y sincero.
