@@ -1,6 +1,6 @@
 # ADR 0002 — Calidad de código y pruebas
 
-- **Estado:** propuesto
+- **Estado:** aceptado
 - **Fecha:** 2026-11-12
 - **Decisión relacionada:** #23
 

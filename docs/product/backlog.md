@@ -1,9 +1,10 @@
 # Backlog del MVP
 
-> **Estado:** propuesta · **Issue:** #7 · **Última revisión:** 2026-11-12
+> **Estado:** completado · **Issue:** #7 · **Última revisión:** 2026-11-13
 >
-> Parte el alcance del [brief](brief.md) en épicas. Cada tarea está pensada para **una PR**.
-> Las épicas se crearán como issues con etiqueta `epic` cuando este documento se apruebe.
+> Partió el alcance del [brief](brief.md) en épicas, con una PR por tarea. El MVP se entregó
+> completo el 2026-11-13; al final está el mapa épica → issue → PR. Este documento se conserva
+> como registro del alcance: no se reabre sin un issue aprobado.
 
 ## Orden recomendado
 
@@ -183,3 +184,22 @@ gamificación, multi-idioma, progresión automática entre semanas, login social
   tests, no con heurísticas.
 - **La revisión por un profesional** (fisioterapeuta o licenciado en deporte) debe ocurrir
   antes del lanzamiento, no después de construir el catálogo completo.
+
+## Cierre del MVP (2026-11-13)
+
+Todo el alcance de arriba está mergeado en `main`. Las épicas se agruparon así:
+
+| Épica | Issue | PRs |
+|---|---|---|
+| E0 — Fundaciones técnicas | #15 | #24, #26, #28, #30, #72, #74 |
+| E1 — Cuenta y consentimiento | #16 | #32, #34, #36, #76 |
+| E2 — Onboarding y trato | #17 | #38, #40, #42, #44, #46 |
+| E3 — IMC | #18 | #48, #49 |
+| E4 — Catálogo de ejercicios | #19 | #52, #54, #58 |
+| E5 — Motor de planes | #20 | #56, #60, #62, #64, #66, #78 |
+| E6 — Sesión guiada | #21 | #68, #86 |
+| E7 — Modo flexible | #22 | #70 |
+| Interfaz y comunicación (transversal) | — | #80, #82, #84, #88 |
+
+Lo que queda no es backlog de producto: es el [despliegue](../deployment.md) y la revisión
+profesional del catálogo y del motor antes de abrir la app al público.

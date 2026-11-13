@@ -37,7 +37,7 @@ Reglas:
 
 | ADR | Título | Estado |
 |---|---|---|
-| [0001](0001-stack-inicial.md) | Stack inicial | propuesto |
-| [0002](0002-calidad-y-pruebas.md) | Calidad de código y pruebas | propuesto |
-| [0003](0003-perfiles-del-motor.md) | Perfiles del motor como datos tipados | propuesto |
-| [0004](0004-segmentacion-dias.md) | Segmentación de días por grupos musculares | propuesto |
+| [0001](0001-stack-inicial.md) | Stack inicial | aceptado |
+| [0002](0002-calidad-y-pruebas.md) | Calidad de código y pruebas | aceptado |
+| [0003](0003-perfiles-del-motor.md) | Perfiles del motor como datos tipados | aceptado |
+| [0004](0004-segmentacion-dias.md) | Segmentación de días por grupos musculares | aceptado |

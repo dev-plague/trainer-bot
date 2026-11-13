@@ -35,7 +35,7 @@ issue → rama → PR → CI verde → revisión → merge por dev-plague
 
 ## Comandos
 
-Se confirman al crear el scaffolding (iteración 1):
+Todos disponibles y confirmados en `main`:
 
 ```bash
 bun install          # instalar dependencias
@@ -47,7 +47,7 @@ bun run build        # build de producción
 bun run db:generate  # generar migración con drizzle-kit
 bun run db:migrate   # aplicar migraciones
 bun run db:seed      # cargar catálogo de ejercicios
-docker compose up -d # PostgreSQL para desarrollo (la app corre con bun run dev)
+docker compose up -d # solo PostgreSQL para desarrollo (la app corre con bun run dev)
 ```
 
 **Lint y formato** corren con Biome, y las pruebas con Vitest (ver

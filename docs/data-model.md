@@ -1,7 +1,8 @@
 # Modelo de datos inicial
 
-> **Estado:** propuesta · **Issue:** #2 · **Implementación:** llega con el scaffolding y las
-> migraciones de Drizzle. Este documento no contiene SQL.
+> **Estado:** implementado · **Issue:** #2 · **Implementación:**
+> `app/features/*/data/schema.ts` y las migraciones de `drizzle/` (`0000`–`0010`). Este
+> documento no contiene SQL.
 
 Diseño del MVP según el brief (§3). El objetivo es que quepa en PostgreSQL sin tablas de más
 y que los datos de salud se puedan borrar en bloque cuando alguien elimine su cuenta.

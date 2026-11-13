@@ -1,6 +1,6 @@
 # ADR 0001 — Stack inicial
 
-- **Estado:** propuesto
+- **Estado:** aceptado
 - **Fecha:** 2026-11-12
 - **Decisión relacionada:** #1, #4
 
