@@ -151,6 +151,7 @@ regla que lo interpreta vive en `onboarding/domain`.
 | `tips` | text[] | Ejecución y prevención de lesiones |
 | `contraindications` | text[] | |
 | `equivalence_group` | text | Base del modo flexible (§3.7) |
+| `mobility_phase` | text: `warmup`, `cooldown`, nullable | Solo la movilidad; define el bloque de la sesión |
 | `regression_id` | text FK → `exercise.id` | Alternativa para ejercicios complejos (§3.9) |
 | `is_complex` | boolean | Habilita el botón "no me siento cómodo" |
 | `source` | text, not null | Guía u organismo que lo respalda; obligatorio |
@@ -200,7 +201,7 @@ legibles.
 | `plan_day_id` | text FK | `ON DELETE CASCADE` |
 | `exercise_id` | text FK → `exercise` | `ON DELETE RESTRICT`: el catálogo no se borra |
 | `position` | integer | Orden dentro del día |
-| `prescription` | jsonb | Unión discriminada: fuerza (series/rango de reps/RIR/descanso), isométrico (series/rango de segundos/descanso), cardio (minutos) o movilidad |
+| `prescription` | jsonb | Unión discriminada: fuerza (series/rango de reps/RIR/descanso), isométrico (series/rango de segundos/descanso), cardio (minutos) o movilidad (series/rango de segundos/descanso) |
 
 La prescripción va en `jsonb` porque tiene cuatro formas distintas; llenar la tabla de columnas
 nulas por tipo no aportaba nada. Las repeticiones y los segundos son rangos (`{min,max}`). No existe ninguna columna de peso ni de carga: es una

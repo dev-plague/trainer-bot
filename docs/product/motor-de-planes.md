@@ -1,10 +1,11 @@
 # Motor de planes — reglas de dominio
 
-> **Estado:** vigente · **Fecha:** 2026-11-12 · **Decisión:** dev-plague · **Issue:** #55
+> **Estado:** vigente · **Fecha:** 2026-11-13 · **Decisión:** dev-plague · **Issue:** #55,
+> actualizado por #85
 >
-> Documento canónico de los perfiles, la segmentación y la cascada del motor. El brief
-> (§3.11) lo resume y enlaza; el [ADR 0003](../adr/0003-perfiles-del-motor.md) explica por qué
-> los perfiles son datos y el [ADR 0004](../adr/0004-segmentacion-dias.md) la segmentación.
+> Documento canónico de los perfiles, la segmentación, la movilidad y la cascada del motor. El
+> brief (§3.11) lo resume y enlaza; el [ADR 0003](../adr/0003-perfiles-del-motor.md) explica por
+> qué los perfiles son datos y el [ADR 0004](../adr/0004-segmentacion-dias.md) la segmentación.
 > Los números son **puntos de partida razonables, no verdades**: deben revisarse con un
 > profesional (fisioterapeuta o licenciado en deporte) antes del lanzamiento.
 
@@ -42,8 +43,10 @@ Cada perfil lleva `fuente`: OMS para el cardio, ACSM para la fuerza.
 3. **Cardio por "prueba del habla"**: moderado = puedes hablar pero no cantar. No se pide
    medir pulso.
 4. **Tiempo → cantidad de ejercicios.** El costo de un ejercicio es
-   `series × (tiempo de la serie + descanso)`. Se resta el calentamiento y el enfriamiento
-   (unos 5 min cada uno) y se añaden ejercicios hasta llenar el tiempo disponible.
+   `series × (tiempo de la serie + descanso)`. El calentamiento y el enfriamiento son pasos
+   reales de 5 min cada uno (§1.4); su tiempo se descuenta del disponible y se añaden
+   ejercicios principales hasta llenar lo que queda. Si no caben los principales, se recortan
+   ellos, nunca la movilidad.
 5. **Cobertura antes que cantidad.** Primero se cubren los patrones de movimiento (empuje,
    tirón, pierna, bisagra de cadera, core) y solo después se rellena.
 6. **Reparto por días.** Cada día tiene una plantilla con patrones y foco muscular (ver
@@ -74,7 +77,37 @@ Cada perfil lleva `fuente`: OMS para el cardio, ACSM para la fuerza.
   el quinto día cuando hay cinco. No se añade en más días que `cardio.sessionsPerWeek.max`
   del perfil, contando también el día dedicado; el volumen sigue saliendo del perfil.
 - **Modo flexible.** Un cambio exige mismo grupo de equivalencia **y** que el candidato
-  pertenezca al foco muscular del día.
+  pertenezca al foco muscular del día. En movilidad, además, se conserva la misma fase
+  (`warmup` con `warmup`, `cooldown` con `cooldown`).
+
+### 1.4 Calentamiento y enfriamiento
+
+Cada día de entrenamiento —incluido el día dedicado a cardio— abre con un bloque de
+calentamiento y cierra con uno de enfriamiento. No son un descuento teórico: son pasos que la
+persona ve y puede completar en la sesión guiada.
+
+- **Composición.** Dos pasos de movilidad por bloque, cada uno de 2 series × 60 s con 15 s de
+  descanso: `2 × (2 × (60 + 15)) = 300 s = 5 min` por bloque. Los dos bloques suman 10 min y
+  ese es el tiempo que se descuenta de `session_minutes`.
+- **Catálogo.** Toda entrada con `equivalence_group = mobility` declara `mobility_phase`
+  (`warmup` o `cooldown`), es de nivel principiante, no usa equipo y lleva `fuente`. El
+  calentamiento cubre cadera, tobillo, hombro y columna torácica; el enfriamiento, isquiotibiales,
+  gemelos, pecho y espalda.
+- **Selección por foco.** Los pasos se clasifican por tren (inferior: cuádriceps, isquiotibiales,
+  glúteos y gemelos; superior: pecho, espalda, hombros, bíceps y tríceps; el core no decide). Si
+  el foco del día toca un tren, el bloque incluye un paso de ese tren; si toca los dos, incluye
+  uno de cada uno; si toca solo uno, los dos pasos salen de ese tren. Dentro del tren se
+  ordenan por coincidencias con el foco, luego por la movilidad ancla (cadera, hombro,
+  isquiotibiales o pecho) y, en empate, por `slug`. Así un día de pierna calienta cadera y
+  tobillo, y uno de torso completo, hombro y columna torácica.
+- **Lesiones y compatibilidad.** Antes de elegir se aplica la misma cascada (lugar, equipo,
+  nivel y limitaciones). Una movilidad contraindicada nunca se selecciona. Si falta un paso de
+  un tren, se completa con otro paso compatible de la misma fase; si no queda ninguno, el
+  motor emite `missing_mobility` y no inventa movilidad.
+- **Presupuesto.** La movilidad se elige antes del trabajo principal. Si el tiempo no alcanza,
+  se recortan ejercicios principales o cardio, nunca el calentamiento ni el enfriamiento.
+- **Sesión guiada.** Son pasos normales, en orden (calentamiento primero, enfriamiento al
+  final). La interfaz los recomienda y permite omitirlos, pero el motor no los elimina del plan.
 
 ## 2. El equipo disponible no alcanza para completar un día
 
@@ -109,7 +142,8 @@ Luego, para cada patrón de movimiento que falte cubrir, probar en orden:
 ### 2.4 Reglas adicionales
 
 - **Mejor una sesión corta que inflar el volumen.** No se superan los topes del perfil para
-  llenar el tiempo. Si sobra tiempo, se añade movilidad o cardio, no series extra.
+  llenar el tiempo. Si sobra tiempo, se añade cardio; la movilidad ya tiene su bloque fijo y
+  no se llena con series extra.
 - **Mínimo útil**: si la sesión queda por debajo de unos 20 minutos, se comunica a la persona
   con honestidad.
 
@@ -131,6 +165,10 @@ tono cercano y sincero de Trainerbot. Ejemplo:
 - Las lesiones declaradas excluyen los ejercicios contraindicados **antes** de la cascada.
 - Invariante del catálogo: todo patrón de movimiento tiene un ejercicio sin equipo.
 - Segmentación: 2/3/4/5 días producen las plantillas de §1.3, sin repetir ejercicios.
+- Todo día incluye calentamiento al inicio y enfriamiento al final; los dos bloques suman
+  10 min y el tiempo total no supera `session_minutes`.
+- Las lesiones declaradas excluyen la movilidad contraindicada y ningún paso de movilidad
+  requiere equipo.
 - Isométricos en segundos y fuerza con rangos de repeticiones.
 - Casos límite: equipo `ninguno`, tiempo mínimo, 5 días por semana.
 
@@ -142,5 +180,5 @@ Ninguno. Los avisos se guardan con el plan y el motor está implementado.
 
 - OMS, *Directrices sobre actividad física y hábitos sedentarios* (2020), para el volumen de
   actividad aeróbica y de fortalecimiento.
-- ACSM, *Guidelines for Exercise Testing and Prescription*, 11.ª ed., para fuerza, RIR y
-  descansos.
+- ACSM, *Guidelines for Exercise Testing and Prescription*, 11.ª ed., para fuerza, RIR,
+  descansos y las recomendaciones de calentamiento y enfriamiento.
