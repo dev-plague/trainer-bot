@@ -129,6 +129,9 @@ export default function Account() {
       </dl>
 
       <nav className="flex flex-col gap-2 text-sm">
+        <Link to="/plan" className="font-medium text-primary underline-offset-4 hover:underline">
+          {authText.account.plan}
+        </Link>
         <Link to="/imc" className="font-medium text-primary underline-offset-4 hover:underline">
           {authText.account.bmi}
         </Link>
