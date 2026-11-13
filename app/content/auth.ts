@@ -28,6 +28,7 @@ export const authText = {
     title: "Tu cuenta",
     emailLabel: "Correo",
     signOut: "Cerrar sesión",
+    plan: "Mi plan",
     settings: "Ajustes y trato",
     bmi: "Ver mi IMC",
     soon: "El cuestionario de salud y tu plan llegan en la siguiente iteración.",

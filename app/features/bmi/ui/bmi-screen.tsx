@@ -90,7 +90,7 @@ export default function BmiScreen() {
       )}
 
       <Button asChild size="lg" className="w-full">
-        <Link to="/cuenta">{bmiText.continue}</Link>
+        <Link to="/plan">{bmiText.continue}</Link>
       </Button>
     </main>
   );
