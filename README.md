@@ -29,6 +29,7 @@ bun run dev              # http://localhost:5173
 
 - [Brief de producto](docs/product/brief.md): el **qué** y el **por qué**. Fuente de verdad.
 - [Guía para agentes y desarrolladores](AGENTS.md): stack, reglas de dominio y flujo de trabajo.
+- [Despliegue](docs/deployment.md): imagen, variables, migraciones y Dokploy.
 
 ## Flujo de trabajo
 

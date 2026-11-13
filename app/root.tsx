@@ -12,6 +12,10 @@ import { common } from "~/content/common";
 import type { Route } from "./+types/root";
 import "./app.css";
 
+export const links: Route.LinksFunction = () => [
+  { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+];
+
 export function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
