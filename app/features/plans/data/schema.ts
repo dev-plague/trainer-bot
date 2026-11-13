@@ -79,6 +79,10 @@ export const planExercise = pgTable(
     exerciseId: text("exercise_id")
       .notNull()
       .references(() => exercise.id, { onDelete: "restrict" }),
+    /** Ejercicio original del plan, si esta fila fue sustituida en modo flexible. */
+    originalExerciseId: text("original_exercise_id").references(() => exercise.id, {
+      onDelete: "set null",
+    }),
     position: integer("position").notNull(),
     prescription: jsonb("prescription").$type<PlanExercisePrescription["prescription"]>().notNull(),
   },

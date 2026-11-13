@@ -107,6 +107,14 @@ export default function PlanView() {
                     <p className="mt-1 text-sm text-muted-foreground">
                       {prescriptionText(exercise.prescription)}
                     </p>
+                    {plan.mode === "flexible" ? (
+                      <Link
+                        to={`/plan/ejercicio/${exercise.planExerciseId}`}
+                        className="mt-2 inline-block text-xs font-medium text-primary underline-offset-4 hover:underline"
+                      >
+                        {plansText.change}
+                      </Link>
+                    ) : null}
                   </li>
                 ))}
               </ul>

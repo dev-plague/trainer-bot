@@ -1,3 +1,4 @@
+export { updatePendingLogsForPlanExercise } from "./data/plan-sync";
 export {
   applyRegression,
   completeCurrentExercise,
