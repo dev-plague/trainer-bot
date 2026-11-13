@@ -3,11 +3,10 @@ import { data, Form, Link, redirect, useActionData, useLoaderData } from "react-
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
 import {
-  getAcceptedConsents,
   getProfile,
   getScreening,
-  missingConsents,
   PARQ_VERSION,
+  requireOnboardingSession,
 } from "~/features/onboarding";
 import { Button } from "~/shared/ui/button";
 import { Greeting } from "~/shared/ui/greeting";
@@ -22,20 +21,7 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    const url = new URL(request.url);
-
-    return redirect(`/entrar?redirectTo=${encodeURIComponent(url.pathname)}`);
-  }
-
-  const accepted = await getAcceptedConsents(session.user.id);
-
-  if (missingConsents(accepted).length > 0) {
-    return redirect("/consentimiento");
-  }
-
+  const session = await requireOnboardingSession(request, "/cuenta");
   const currentProfile = await getProfile(session.user.id);
 
   if (!currentProfile) {

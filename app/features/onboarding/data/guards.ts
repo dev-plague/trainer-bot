@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
 
-import { getCurrentSession } from "~/features/auth";
+import { requireUser } from "~/features/auth";
 import { missingConsents } from "../domain/consents";
 import { PARQ_VERSION } from "../domain/parq";
 import { getAcceptedConsents } from "./consents";
@@ -11,11 +11,7 @@ import { getProfile } from "./profile";
  * Exige sesión y consentimientos vigentes. Lanza una redirección si falta algo.
  */
 export async function requireOnboardingSession(request: Request, next: string) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    throw redirect(`/entrar?redirectTo=${encodeURIComponent(next)}`);
-  }
+  const session = await requireUser(request, next);
 
   const accepted = await getAcceptedConsents(session.user.id);
 

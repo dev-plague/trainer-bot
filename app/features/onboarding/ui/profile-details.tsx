@@ -3,14 +3,12 @@ import { z } from "zod";
 
 import { common } from "~/content/common";
 import { onboardingText } from "~/content/onboarding";
-import { getCurrentSession } from "~/features/auth";
 import { Button } from "~/shared/ui/button";
 import { FieldError, FormError } from "~/shared/ui/form";
 import { Input } from "~/shared/ui/input";
-import { getAcceptedConsents } from "../data/consents";
+import { requireOnboardingSession } from "../data/guards";
 import { getProfile, saveProfileDetails } from "../data/profile";
 import { ADULT_AGE, calculateAge } from "../domain/age";
-import { missingConsents } from "../domain/consents";
 import { profileDetailsSchema } from "../domain/profile";
 import type { Route } from "./+types/profile-details";
 
@@ -24,17 +22,7 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    return redirect(`/entrar?redirectTo=${encodeURIComponent("/perfil")}`);
-  }
-
-  const accepted = await getAcceptedConsents(session.user.id);
-
-  if (missingConsents(accepted).length > 0) {
-    return redirect("/consentimiento");
-  }
+  const session = await requireOnboardingSession(request, "/perfil");
 
   const currentProfile = await getProfile(session.user.id);
 
@@ -50,17 +38,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    return redirect(`/entrar?redirectTo=${encodeURIComponent("/perfil")}`);
-  }
-
-  const accepted = await getAcceptedConsents(session.user.id);
-
-  if (missingConsents(accepted).length > 0) {
-    return redirect("/consentimiento");
-  }
+  const session = await requireOnboardingSession(request, "/perfil");
 
   const currentProfile = await getProfile(session.user.id);
 

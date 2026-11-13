@@ -3,11 +3,9 @@ import { z } from "zod";
 
 import { common } from "~/content/common";
 import { onboardingText } from "~/content/onboarding";
-import { getCurrentSession } from "~/features/auth";
 import { Button } from "~/shared/ui/button";
-import { getAcceptedConsents } from "../data/consents";
+import { requireOnboardingSession } from "../data/guards";
 import { getProfile, saveProfile } from "../data/profile";
-import { missingConsents } from "../domain/consents";
 import { profileSetupSchema } from "../domain/profile";
 import type { Route } from "./+types/onboarding";
 import { PreferredNameFields } from "./preferred-name-fields";
@@ -17,18 +15,7 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    return redirect(`/entrar?redirectTo=${encodeURIComponent("/onboarding")}`);
-  }
-
-  const accepted = await getAcceptedConsents(session.user.id);
-
-  if (missingConsents(accepted).length > 0) {
-    return redirect("/consentimiento");
-  }
-
+  const session = await requireOnboardingSession(request, "/onboarding");
   const currentProfile = await getProfile(session.user.id);
 
   if (currentProfile) {
@@ -39,18 +26,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const session = await getCurrentSession(request);
-
-  if (!session) {
-    return redirect(`/entrar?redirectTo=${encodeURIComponent("/onboarding")}`);
-  }
-
-  const accepted = await getAcceptedConsents(session.user.id);
-
-  if (missingConsents(accepted).length > 0) {
-    return redirect("/consentimiento");
-  }
-
+  const session = await requireOnboardingSession(request, "/onboarding");
   const formData = await request.formData();
   const parsed = profileSetupSchema.safeParse({
     preferredName: formData.get("preferredName"),

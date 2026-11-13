@@ -7,6 +7,7 @@ import { safeRedirectPath } from "~/shared/lib/safe-redirect";
 import { Button } from "~/shared/ui/button";
 import { FieldError, FormError } from "~/shared/ui/form";
 import { Input } from "~/shared/ui/input";
+import { requireGuest } from "../data/guards";
 import { authErrorCode } from "../domain/errors";
 import { signInSchema } from "../domain/schemas";
 import { auth } from "../server";
@@ -22,7 +23,13 @@ export function meta() {
   return [{ title: `${authText.login.title} · ${common.appName}` }];
 }
 
+export async function loader({ request }: Route.LoaderArgs) {
+  return requireGuest(request);
+}
+
 export async function action({ request }: Route.ActionArgs) {
+  await requireGuest(request);
+
   const url = new URL(request.url);
   const redirectTo = safeRedirectPath(url.searchParams.get("redirectTo"), "/cuenta");
   const formData = await request.formData();
