@@ -8,6 +8,8 @@ plan flexible, sesión en curso y datos de IMC y cuenta.
 - Las capturas «antes» son solo de modo claro: el tema anterior no tenía modo oscuro.
 - Las capturas «después» incluyen modo claro y oscuro; el oscuro se emuló con
   `prefers-color-scheme: dark`.
+- La comparación es de color, no de contenido: el plan de prueba pasó a modo flexible y
+  tiene una sesión en curso, así que algunos textos cambian entre «antes» y «después».
 
 El detalle de tokens, reglas y contraste está en
 [`docs/ui/sistema-de-color.md`](../sistema-de-color.md).
