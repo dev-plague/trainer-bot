@@ -1,0 +1,15 @@
+node_modules
+build
+.git
+.github
+.env
+.env.*
+!.env.example
+.openchamber
+docs
+coverage
+*.log
+docker-compose.yml
+Dockerfile
+.dockerignore
+README.md
