@@ -22,6 +22,10 @@
 El `Dockerfile` es multi-stage: Bun instala y construye, Node ejecuta React Router
 (ADR 0001). Corre como usuario `node`, expone `3000` y tiene healthcheck contra `/`.
 
+El servidor de producción es `server.mjs` (Express + adaptador de React Router): añade
+cabeceras de seguridad, sirve los assets con caché y confía en el proxy de Dokploy para que
+Better Auth pueda resolver la IP del cliente.
+
 ```bash
 docker build -t trainerbot .
 docker run --rm -p 3000:3000 --env-file .env.production trainerbot
@@ -80,7 +84,8 @@ docker run --rm --env-file .env.production trainerbot bun run db:seed
 
 - Sin verificación de correo ni recuperación de contraseña: no hay proveedor de correo
   (decisión registrada en el brief).
-- Sin CSP propia; se apoya en HTTPS de Dokploy/Traefik. Conviene revisar cabeceras antes de
-  abrir al público.
+- La CSP usa `'unsafe-inline'` en `script-src` porque React Router emite scripts inline de
+  hidratación. Endurecerla con nonces es el siguiente paso; hoy ya bloquea orígenes externos,
+  `frame-ancestors` y `object-src`.
 - Los días de cuerpo completo son iguales entre sí (rotación pendiente).
 - Falta la revisión profesional del catálogo y del motor antes del lanzamiento.

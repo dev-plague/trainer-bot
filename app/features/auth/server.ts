@@ -17,4 +17,11 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
+  advanced: {
+    ipAddress: {
+      // Dokploy/Traefik añade X-Forwarded-For. Los rangos privados son los
+      // proxies de la red de Docker: se saltan para quedarse con la IP real.
+      trustedProxies: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
+    },
+  },
 });

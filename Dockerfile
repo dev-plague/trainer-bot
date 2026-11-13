@@ -23,7 +23,7 @@ ENV PORT=3000
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
 COPY --from=build /app/app ./app
-COPY package.json bun.lock drizzle.config.ts ./
+COPY package.json bun.lock drizzle.config.ts server.mjs ./
 COPY drizzle ./drizzle
 
 RUN chown -R node:node /app
