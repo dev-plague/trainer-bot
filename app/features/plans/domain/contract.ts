@@ -47,15 +47,32 @@ export type PlanWarning = {
 
 export type PlanExercisePrescription = {
   exerciseSlug: string;
-  sets: number;
-  reps: number;
-  rir: number;
-  restSeconds: number;
+  prescription:
+    | {
+        kind: "strength";
+        sets: number;
+        reps: number;
+        rir: number;
+        restSeconds: number;
+      }
+    | {
+        kind: "cardio";
+        minutes: number;
+        intensity: "light" | "moderate" | "light_moderate";
+      }
+    | {
+        kind: "mobility";
+        sets: number;
+        reps: number;
+      };
 };
+
+export const PLAN_DAY_CATEGORIES = ["full_body", "upper", "lower", "cardio"] as const;
+export type PlanDayCategory = (typeof PLAN_DAY_CATEGORIES)[number];
 
 export type PlanDay = {
   dayIndex: number;
-  category: string;
+  category: PlanDayCategory;
   isRest: boolean;
   exercises: PlanExercisePrescription[];
 };
