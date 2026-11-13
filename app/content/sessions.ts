@@ -1,0 +1,22 @@
+export const sessionsText = {
+  start: "Empezar sesión",
+  continue: "Continuar sesión",
+  inProgressTitle: "Tienes una sesión sin terminar",
+  inProgressBody: "Puedes retomarla donde la dejaste.",
+  progress: (current: number, total: number) => `Ejercicio ${current} de ${total}`,
+  safetyTitle: "Recuerda",
+  tips: "Cómo hacerlo",
+  muscles: "Músculos",
+  done: "Hecho, siguiente",
+  finish: "Terminar sesión",
+  leave: "Salir y continuar luego",
+  regression: "No me siento cómodo con este ejercicio o no lo ejecuto bien",
+  regressionHint: (name: string) => `Puedo cambiarlo ahora mismo por «${name}».`,
+  regressionApplied: "Cambiado a una versión más fácil.",
+  summaryTitle: "Sesión completada",
+  summaryBody: (done: number, minutes: number) =>
+    `Hiciste ${done} ejercicios en unos ${minutes} minutos.`,
+  backToPlan: "Volver al plan",
+  notFound: "No encontramos esa sesión.",
+  dayLabel: "Día",
+};

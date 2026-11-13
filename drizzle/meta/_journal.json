@@ -43,6 +43,13 @@
       "when": 1794539708924,
       "tag": "0005_organic_junta",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794540833312,
+      "tag": "0006_friendly_shriek",
+      "breakpoints": true
     }
   ]
 }

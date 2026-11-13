@@ -224,7 +224,8 @@ la idea de "sesión de entrenamiento" del producto en el código.
 |---|---|---|
 | `id` | text PK | |
 | `workout_session_id` | text FK | `ON DELETE CASCADE` |
-| `plan_exercise_id` | text FK | |
+| `plan_exercise_id` | text FK | Ejercicio planificado |
+| `exercise_id` | text FK → `exercise` | Ejercicio realmente hecho; cambia si se usa la regresión |
 | `position` | integer | Copia del orden al momento de entrenar |
 | `status` | enum: `pending`, `done`, `skipped` | |
 | `completed_at` | timestamptz | |

@@ -1,5 +1,5 @@
 export { getAcceptedConsents, recordConsents } from "./data/consents";
-export { requireCompleteProfile, requireOnboardingSession } from "./data/guards";
+export { requireCompleteProfile, requireOnboardingSession, requireReadyUser } from "./data/guards";
 export { getScreening, saveScreening } from "./data/health";
 export { getProfile, saveProfile, saveProfileDetails } from "./data/profile";
 export type { AddressForm } from "./domain/address-form";
