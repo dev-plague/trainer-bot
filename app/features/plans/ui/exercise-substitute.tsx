@@ -125,7 +125,7 @@ export default function ExerciseSubstitute() {
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="flex min-h-16 w-full items-start justify-between gap-3 rounded-xl border bg-card px-4 py-3 text-left shadow-sm transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/40 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-60"
+                        className="flex min-h-16 w-full items-start justify-between gap-3 rounded-xl border bg-card px-4 py-3 text-left shadow-sm transition-colors hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-60"
                       >
                         <span className="min-w-0 space-y-1.5">
                           <span className="block text-sm font-medium">{option.name}</span>

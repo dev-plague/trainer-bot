@@ -75,6 +75,8 @@ Reglas:
   no el nombre de la cuenta. El saludo según la hora se calcula en el cliente.
 - Los textos de la interfaz van en `app/content/`, en español, con tono cercano y sincero.
   No los escribas directamente dentro de los componentes.
+- Los colores viven solo en `app/app.css`. Antes de añadir o cambiar uno, lee el
+  [sistema de color](docs/ui/sistema-de-color.md): tokens, reglas de uso y contraste.
 
 ## Convenciones de código
 

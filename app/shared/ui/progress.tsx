@@ -13,7 +13,7 @@ function Progress({
     <ProgressPrimitive.Root
       data-slot="progress"
       className={cn(
-        // Pista clara + relleno primario: contraste > 3:1 entre parte llena y vacía.
+        // Pista cálida + relleno terracota: 4,23:1 en claro y 5,19:1 en oscuro.
         "relative h-2.5 w-full overflow-hidden rounded-full bg-muted ring-1 ring-border ring-inset",
         className,
       )}
@@ -21,7 +21,7 @@ function Progress({
     >
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className="h-full w-full flex-1 bg-primary transition-all"
+        className="h-full w-full flex-1 bg-accent transition-all"
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>

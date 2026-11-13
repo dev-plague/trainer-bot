@@ -79,9 +79,9 @@ function Referral() {
         description={healthText.result.body}
       />
 
-      <Card className="border-warning/40 bg-warning/5">
+      <Card className="border-border bg-muted">
         <CardContent className="flex gap-3">
-          <AlertIcon size={22} className="mt-0.5 shrink-0 text-warning" />
+          <AlertIcon size={22} className="mt-0.5 shrink-0 text-muted-foreground" />
           <p className="text-sm leading-relaxed text-muted-foreground">{healthText.result.saved}</p>
         </CardContent>
       </Card>

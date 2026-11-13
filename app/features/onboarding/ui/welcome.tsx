@@ -21,7 +21,7 @@ export default function Welcome() {
     <main className="relative mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(70%_60%_at_50%_0%,var(--accent),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(70%_60%_at_50%_0%,color-mix(in_oklab,var(--accent)_22%,transparent),transparent)]"
       />
 
       <div className="relative flex items-center justify-between">
@@ -46,7 +46,7 @@ export default function Welcome() {
 
       <Card className="relative border-primary/20 bg-card/80 shadow-sm backdrop-blur">
         <CardContent className="flex items-start gap-3">
-          <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+          <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <PlanIcon size={20} />
           </span>
           <p className="text-sm leading-relaxed text-muted-foreground">{common.welcomeCard}</p>

@@ -97,7 +97,7 @@ export default function Settings() {
       <nav aria-label="Accesos" className="grid gap-2 sm:grid-cols-2">
         <Link
           to="/perfil"
-          className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-accent"
+          className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-muted"
         >
           <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted">
             <PlanIcon size={20} />
@@ -107,7 +107,7 @@ export default function Settings() {
         </Link>
         <Link
           to="/cuenta"
-          className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-accent"
+          className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-muted"
         >
           <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted">
             <BmiIcon size={20} />

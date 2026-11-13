@@ -254,7 +254,7 @@ export default function PlanForm() {
                 rows={3}
                 maxLength={300}
                 placeholder={plansText.limitationsPlaceholder}
-                className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30"
+                className="flex w-full rounded-lg border border-input bg-card px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring"
               />
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {plansText.limitationsHelp}
