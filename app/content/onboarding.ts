@@ -19,6 +19,7 @@ export const onboardingText = {
     subtitle: "Uso estos datos para calcular tu IMC y ajustar el plan. El peso es opcional.",
     birthDateLabel: "Fecha de nacimiento",
     birthDateHelp: "Solo la uso para saber tu edad y calcular tu IMC.",
+    birthDatePlaceholder: "Elegir fecha",
     heightLabel: "Estatura (cm)",
     heightPlaceholder: "170",
     weightLabel: "Peso (kg, opcional)",

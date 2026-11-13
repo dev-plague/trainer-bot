@@ -4,6 +4,12 @@ import { common } from "~/content/common";
 import { equipmentLabel, exercisesText, muscleLabel } from "~/content/exercises";
 import { getCurrentSession } from "~/features/auth";
 import { exerciseSlugSchema, getExerciseBySlug } from "~/features/exercises";
+import { Badge } from "~/shared/ui/badge";
+import { Button } from "~/shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
+import { ExerciseTypeBadge, MuscleBadges } from "~/shared/ui/exercise-meta";
+import { AlertIcon, ArrowRightIcon } from "~/shared/ui/icons";
+import { PageHeader } from "~/shared/ui/page-header";
 import type { Route } from "./+types/exercise-detail";
 
 export function meta() {
@@ -34,85 +40,108 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function ExerciseDetail() {
   const exercise = useLoaderData<typeof loader>();
+  const kind = exercise.measure === "seconds" ? "isometric" : "strength";
 
   return (
-    <main className="mx-auto w-full max-w-md space-y-6 px-6 py-10">
-      <Link
-        to="/cuenta"
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-      >
-        ← {exercisesText.back}
-      </Link>
+    <div className="space-y-6">
+      <Button asChild variant="ghost" size="sm" className="-ml-2">
+        <Link to="/plan">← {exercisesText.back}</Link>
+      </Button>
 
-      <header className="space-y-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{exercise.name}</h1>
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="rounded-full border border-border px-2 py-1 text-muted-foreground">
-            {exercisesText.places[exercise.place]}
-          </span>
-          <span className="rounded-full border border-border px-2 py-1 text-muted-foreground">
-            {exercisesText.levels[exercise.level]}
-          </span>
+      <PageHeader eyebrow={common.appName} title={exercise.name}>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="outline">{exercisesText.places[exercise.place]}</Badge>
+          <Badge variant="outline">{exercisesText.levels[exercise.level]}</Badge>
+          <ExerciseTypeBadge kind={kind} />
         </div>
-      </header>
+      </PageHeader>
 
-      <section className="space-y-1">
-        <h2 className="text-sm font-semibold">{exercisesText.muscles}</h2>
-        <p className="text-sm text-muted-foreground">
-          {exercise.primaryMuscles.map(muscleLabel).join(", ")}
-        </p>
-        {exercise.secondaryMuscles.length > 0 ? (
-          <p className="text-xs text-muted-foreground">
-            {exercisesText.secondaryMuscles}:{" "}
-            {exercise.secondaryMuscles.map(muscleLabel).join(", ")}
-          </p>
-        ) : null}
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{exercisesText.muscles}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <MuscleBadges muscles={exercise.primaryMuscles} max={10} />
+          {exercise.secondaryMuscles.length > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {exercisesText.secondaryMuscles}:{" "}
+              {exercise.secondaryMuscles.map(muscleLabel).join(", ")}
+            </p>
+          ) : null}
+        </CardContent>
+      </Card>
 
-      <section className="space-y-1">
-        <h2 className="text-sm font-semibold">{exercisesText.equipment}</h2>
-        <p className="text-sm text-muted-foreground">
-          {exercise.equipment.length > 0
-            ? exercise.equipment.map(equipmentLabel).join(", ")
-            : exercisesText.noEquipment}
-        </p>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{exercisesText.equipment}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {exercise.equipment.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {exercise.equipment.map((item) => (
+                <Badge key={item} variant="secondary">
+                  {equipmentLabel(item)}
+                </Badge>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">{exercisesText.noEquipment}</p>
+          )}
+        </CardContent>
+      </Card>
 
-      <section className="space-y-2">
-        <h2 className="text-sm font-semibold">{exercisesText.tips}</h2>
-        <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-          {exercise.tips.map((tip) => (
-            <li key={tip}>{tip}</li>
-          ))}
-        </ul>
-      </section>
-
-      {exercise.contraindications.length > 0 ? (
-        <section className="space-y-2 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
-          <h2 className="text-sm font-semibold text-destructive">
-            {exercisesText.contraindications}
-          </h2>
-          <ul className="list-inside list-disc space-y-1 text-sm text-destructive/90">
-            {exercise.contraindications.map((item) => (
-              <li key={item}>{item}</li>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{exercisesText.tips}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+            {exercise.tips.map((tip) => (
+              <li key={tip} className="flex gap-2">
+                <span
+                  aria-hidden="true"
+                  className="mt-2 size-1.5 shrink-0 rounded-full bg-primary"
+                />
+                {tip}
+              </li>
             ))}
           </ul>
-        </section>
+        </CardContent>
+      </Card>
+
+      {exercise.contraindications.length > 0 ? (
+        <Card className="border-warning/40 bg-warning/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <AlertIcon size={18} className="text-warning" />
+              {exercisesText.contraindications}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-1 text-sm text-muted-foreground">
+              {exercise.contraindications.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       ) : null}
 
       {exercise.regression ? (
-        <section className="space-y-2 rounded-lg border border-border p-4">
-          <p className="text-sm text-muted-foreground">{exercisesText.regression}</p>
-          <Link
-            to={`/ejercicios/${exercise.regression.slug}`}
-            className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-          >
-            {exercise.regression.name}
-          </Link>
-        </section>
+        <Card className="border-primary/25 bg-primary/5">
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">{exercisesText.regression}</p>
+            <Button asChild variant="outline" className="w-full gap-2">
+              <Link to={`/ejercicios/${exercise.regression.slug}`}>
+                {exercise.regression.name}
+                <ArrowRightIcon size={16} />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       ) : null}
 
-      <footer className="border-t border-border pt-4 text-xs text-muted-foreground">
+      <footer className="border-t pt-4 text-xs text-muted-foreground">
         {exercisesText.source}:{" "}
         {exercise.sourceUrl ? (
           <a href={exercise.sourceUrl} className="underline underline-offset-4" rel="noreferrer">
@@ -122,6 +151,6 @@ export default function ExerciseDetail() {
           exercise.source
         )}
       </footer>
-    </main>
+    </div>
   );
 }

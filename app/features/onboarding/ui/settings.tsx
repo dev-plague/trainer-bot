@@ -1,10 +1,14 @@
+import { useEffect } from "react";
 import { data, Form, Link, useActionData, useLoaderData } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { common } from "~/content/common";
-import { onboardingText } from "~/content/onboarding";
 import { settingsText } from "~/content/settings";
 import { Button } from "~/shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
+import { ArrowRightIcon, BmiIcon, PlanIcon } from "~/shared/ui/icons";
+import { PageHeader } from "~/shared/ui/page-header";
 import { requireCompleteProfile } from "../data/guards";
 import { saveProfile } from "../data/profile";
 import { profileSetupSchema } from "../domain/profile";
@@ -57,49 +61,61 @@ export default function Settings() {
   const { preferredName, addressForm } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
+  useEffect(() => {
+    if (actionData?.saved) {
+      toast.success(settingsText.savedToast);
+    }
+  }, [actionData?.saved]);
+
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
-      <div className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          {common.appName}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{settingsText.title}</h1>
-        <p className="text-sm leading-relaxed text-muted-foreground">{settingsText.subtitle}</p>
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow={common.appName}
+        title={settingsText.title}
+        description={settingsText.subtitle}
+      />
 
-      <Form method="post" className="space-y-6" noValidate>
-        <PreferredNameFields
-          defaultName={preferredName}
-          defaultAddressForm={addressForm}
-          errors={actionData?.fieldErrors}
-        />
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{settingsText.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form method="post" className="space-y-6" noValidate>
+            <PreferredNameFields
+              defaultName={preferredName}
+              defaultAddressForm={addressForm}
+              errors={actionData?.fieldErrors}
+            />
 
-        {actionData?.saved ? (
-          <p
-            role="status"
-            className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-primary"
-          >
-            {settingsText.saved}
-          </p>
-        ) : null}
+            <Button type="submit" size="lg" className="w-full">
+              {settingsText.submit}
+            </Button>
+          </Form>
+        </CardContent>
+      </Card>
 
-        <Button type="submit" size="lg" className="w-full">
-          {settingsText.submit}
-        </Button>
-      </Form>
-
-      <nav className="flex flex-col gap-2 text-sm">
-        <Link to="/perfil" className="font-medium text-primary underline-offset-4 hover:underline">
-          {settingsText.profileLink}
+      <nav aria-label="Accesos" className="grid gap-2 sm:grid-cols-2">
+        <Link
+          to="/perfil"
+          className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-accent"
+        >
+          <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted">
+            <PlanIcon size={20} />
+          </span>
+          <span className="flex-1 text-sm font-medium">{settingsText.profileLink}</span>
+          <ArrowRightIcon size={16} className="text-muted-foreground" />
         </Link>
-        <Link to="/cuenta" className="font-medium text-primary underline-offset-4 hover:underline">
-          {settingsText.accountLink}
+        <Link
+          to="/cuenta"
+          className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-accent"
+        >
+          <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted">
+            <BmiIcon size={20} />
+          </span>
+          <span className="flex-1 text-sm font-medium">{settingsText.accountLink}</span>
+          <ArrowRightIcon size={16} className="text-muted-foreground" />
         </Link>
       </nav>
-
-      <p className="text-center text-xs text-muted-foreground">
-        {onboardingText.preferredName.addressHelp}
-      </p>
-    </main>
+    </div>
   );
 }

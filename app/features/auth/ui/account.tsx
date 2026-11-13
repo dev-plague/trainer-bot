@@ -8,9 +8,31 @@ import {
   PARQ_VERSION,
   requireOnboardingSession,
 } from "~/features/onboarding";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/shared/ui/alert-dialog";
+import { Badge } from "~/shared/ui/badge";
 import { Button } from "~/shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
 import { Greeting } from "~/shared/ui/greeting";
+import {
+  AccountIcon,
+  AlertIcon,
+  ArrowRightIcon,
+  BmiIcon,
+  LogoutIcon,
+  PlanIcon,
+  SettingsIcon,
+} from "~/shared/ui/icons";
 import { Input } from "~/shared/ui/input";
+import { PageHeader } from "~/shared/ui/page-header";
 import { getCurrentSession } from "../data/session";
 import { authErrorCode } from "../domain/errors";
 import { auth } from "../server";
@@ -96,72 +118,68 @@ async function deleteAccount(request: Request, formData: FormData) {
 export default function Account() {
   const { preferredName, email } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
+  const links = [
+    { to: "/plan", label: authText.account.plan, Icon: PlanIcon },
+    { to: "/imc", label: authText.account.bmi, Icon: BmiIcon },
+    { to: "/ajustes", label: authText.account.settings, Icon: SettingsIcon },
+  ];
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
-      <div className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          {common.appName}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{authText.account.title}</h1>
-        <p className="text-muted-foreground">
-          <Greeting />, {preferredName}.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <PageHeader eyebrow={common.appName} title={authText.account.title} />
 
-      <dl className="space-y-1 rounded-lg border border-border p-4">
-        <dt className="text-sm text-muted-foreground">{authText.account.emailLabel}</dt>
-        <dd className="font-medium break-all">{email}</dd>
-      </dl>
+      <Card className="overflow-hidden">
+        <CardContent className="flex items-center gap-4">
+          <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+            <AccountIcon size={26} />
+          </span>
+          <div className="min-w-0 space-y-1">
+            <p className="truncate text-lg font-semibold">
+              <Greeting />, {preferredName}.
+            </p>
+            <p className="truncate text-sm text-muted-foreground">{email}</p>
+          </div>
+          <Badge variant="secondary" className="ml-auto shrink-0">
+            {authText.account.title}
+          </Badge>
+        </CardContent>
+      </Card>
 
-      <nav className="flex flex-col gap-2 text-sm">
-        <Link to="/plan" className="font-medium text-primary underline-offset-4 hover:underline">
-          {authText.account.plan}
-        </Link>
-        <Link to="/imc" className="font-medium text-primary underline-offset-4 hover:underline">
-          {authText.account.bmi}
-        </Link>
-        <Link to="/ajustes" className="font-medium text-primary underline-offset-4 hover:underline">
-          {authText.account.settings}
-        </Link>
+      <nav aria-label="Secciones de la cuenta" className="grid gap-2 sm:grid-cols-3">
+        {links.map(({ to, label, Icon }) => (
+          <Link
+            key={to}
+            to={to}
+            className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-accent"
+          >
+            <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted">
+              <Icon size={20} />
+            </span>
+            <span className="flex-1 text-sm font-medium">{label}</span>
+            <ArrowRightIcon size={16} className="text-muted-foreground" />
+          </Link>
+        ))}
       </nav>
-
-      <p className="text-sm text-muted-foreground">{authText.account.soon}</p>
 
       <Form method="post">
         <input type="hidden" name="intent" value="signout" />
-        <Button type="submit" variant="outline" className="w-full">
+        <Button type="submit" variant="outline" className="w-full gap-2">
+          <LogoutIcon size={18} />
           {authText.account.signOut}
         </Button>
       </Form>
 
-      <section className="space-y-3 rounded-lg border border-destructive/30 p-4">
-        <h2 className="text-sm font-semibold text-destructive">{authText.account.deleteTitle}</h2>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {authText.account.deleteBody}
-        </p>
-
-        <Form method="post" className="space-y-3">
-          <input type="hidden" name="intent" value="delete" />
-
-          <div className="space-y-1">
-            <label htmlFor="confirm" className="text-sm font-medium">
-              {authText.account.deleteConfirmLabel}
-            </label>
-            <Input id="confirm" name="confirm" autoComplete="off" autoCapitalize="characters" />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="delete-password" className="text-sm font-medium">
-              {authText.account.deletePasswordLabel}
-            </label>
-            <Input
-              id="delete-password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-            />
-          </div>
+      <Card className="border-destructive/30">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base text-destructive">
+            <AlertIcon size={18} />
+            {authText.account.deleteTitle}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {authText.account.deleteBody}
+          </p>
 
           {actionData?.deleteError ? (
             <p role="alert" className="text-sm text-destructive">
@@ -169,11 +187,49 @@ export default function Account() {
             </p>
           ) : null}
 
-          <Button type="submit" variant="destructive" className="w-full">
-            {authText.account.deleteSubmit}
-          </Button>
-        </Form>
-      </section>
-    </main>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" className="w-full">
+                {authText.account.deleteSubmit}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{authText.account.deleteTitle}</AlertDialogTitle>
+                <AlertDialogDescription>{authText.account.deleteBody}</AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <Form method="post" className="space-y-3">
+                <input type="hidden" name="intent" value="delete" />
+                <div className="space-y-1">
+                  <label htmlFor="confirm" className="text-sm font-medium">
+                    {authText.account.deleteConfirmLabel}
+                  </label>
+                  <Input id="confirm" name="confirm" autoComplete="off" />
+                </div>
+                <div className="space-y-1">
+                  <label htmlFor="delete-password" className="text-sm font-medium">
+                    {authText.account.deletePasswordLabel}
+                  </label>
+                  <Input
+                    id="delete-password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                  />
+                </div>
+
+                <AlertDialogFooter>
+                  <AlertDialogCancel type="button">{authText.account.cancel}</AlertDialogCancel>
+                  <Button type="submit" variant="destructive">
+                    {authText.account.deleteSubmit}
+                  </Button>
+                </AlertDialogFooter>
+              </Form>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

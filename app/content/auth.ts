@@ -42,6 +42,7 @@ export const authText = {
     deletePasswordError: "Escribe tu contraseña.",
     deleteWrongPassword: "La contraseña no es correcta.",
     deleteGeneric: "No pudimos eliminar la cuenta. Inténtalo de nuevo.",
+    cancel: "Cancelar",
   },
   errors: {
     invalidEmail: "Escribe un correo válido.",

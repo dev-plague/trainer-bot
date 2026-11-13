@@ -4,7 +4,8 @@ import { z } from "zod";
 import { authText } from "~/content/auth";
 import { common } from "~/content/common";
 import { Button } from "~/shared/ui/button";
-import { FieldError, FormError } from "~/shared/ui/form";
+import { Field, FieldError, FieldGroup, FieldLabel } from "~/shared/ui/field";
+import { FormError } from "~/shared/ui/form";
 import { Input } from "~/shared/ui/input";
 import { requireGuest } from "../data/guards";
 import { authErrorCode } from "../domain/errors";
@@ -75,58 +76,54 @@ export default function Register() {
       <Form method="post" className="space-y-4" noValidate>
         <FormError message={actionData?.formError} />
 
-        <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium">
-            {authText.fields.name}
-          </label>
-          <Input
-            id="name"
-            name="name"
-            type="text"
-            autoComplete="name"
-            placeholder={authText.fields.namePlaceholder}
-            required
-            aria-invalid={Boolean(errors?.name)}
-            aria-describedby={errors?.name ? "name-error" : undefined}
-          />
-          <FieldError id="name-error" message={errors?.name?.[0]} />
-        </div>
+        <FieldGroup className="gap-4">
+          <Field>
+            <FieldLabel htmlFor="name">{authText.fields.name}</FieldLabel>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              autoComplete="name"
+              className="h-11"
+              placeholder={authText.fields.namePlaceholder}
+              required
+              aria-invalid={Boolean(errors?.name)}
+            />
+            <FieldError>{errors?.name?.[0]}</FieldError>
+          </Field>
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            {authText.fields.email}
-          </label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            placeholder={authText.fields.emailPlaceholder}
-            required
-            aria-invalid={Boolean(errors?.email)}
-            aria-describedby={errors?.email ? "email-error" : undefined}
-          />
-          <FieldError id="email-error" message={errors?.email?.[0]} />
-        </div>
+          <Field>
+            <FieldLabel htmlFor="email">{authText.fields.email}</FieldLabel>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              className="h-11"
+              placeholder={authText.fields.emailPlaceholder}
+              required
+              aria-invalid={Boolean(errors?.email)}
+            />
+            <FieldError>{errors?.email?.[0]}</FieldError>
+          </Field>
 
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium">
-            {authText.fields.password}
-          </label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            placeholder={authText.fields.passwordPlaceholder}
-            required
-            minLength={8}
-            aria-invalid={Boolean(errors?.password)}
-            aria-describedby={errors?.password ? "password-error" : undefined}
-          />
-          <FieldError id="password-error" message={errors?.password?.[0]} />
-        </div>
+          <Field>
+            <FieldLabel htmlFor="password">{authText.fields.password}</FieldLabel>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              className="h-11"
+              placeholder={authText.fields.passwordPlaceholder}
+              required
+              minLength={8}
+              aria-invalid={Boolean(errors?.password)}
+            />
+            <FieldError>{errors?.password?.[0]}</FieldError>
+          </Field>
+        </FieldGroup>
 
         <Button type="submit" size="lg" className="w-full">
           {authText.register.submit}
