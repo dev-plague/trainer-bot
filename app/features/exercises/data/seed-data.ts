@@ -29,7 +29,7 @@ export const EXERCISES = [
     name: "Sentadilla con mancuerna",
     primaryMuscles: ["Cuádriceps", "Glúteos"],
     secondaryMuscles: ["Core"],
-    equipment: ["Mancuernas"],
+    equipment: ["mancuernas"],
     place: "gym",
     level: "intermediate",
     tips: [
@@ -127,7 +127,7 @@ export const EXERCISES = [
     name: "Press de mancuernas",
     primaryMuscles: ["Pectoral", "Hombro"],
     secondaryMuscles: ["Tríceps"],
-    equipment: ["Mancuernas", "Banco"],
+    equipment: ["mancuernas", "banco-o-silla"],
     place: "gym",
     level: "intermediate",
     tips: [
@@ -143,7 +143,7 @@ export const EXERCISES = [
     name: "Remo con banda",
     primaryMuscles: ["Dorsal", "Romboides"],
     secondaryMuscles: ["Bíceps"],
-    equipment: ["Banda elástica"],
+    equipment: ["bandas"],
     place: "home",
     level: "beginner",
     tips: [
@@ -175,7 +175,7 @@ export const EXERCISES = [
     name: "Dominadas",
     primaryMuscles: ["Dorsal", "Bíceps"],
     secondaryMuscles: ["Core"],
-    equipment: ["Barra"],
+    equipment: ["barra-de-dominadas"],
     place: "gym",
     level: "advanced",
     tips: [
@@ -193,7 +193,7 @@ export const EXERCISES = [
     name: "Jalón en polea",
     primaryMuscles: ["Dorsal"],
     secondaryMuscles: ["Bíceps", "Romboides"],
-    equipment: ["Polea"],
+    equipment: ["gimnasio-completo"],
     place: "gym",
     level: "beginner",
     tips: [
@@ -225,7 +225,7 @@ export const EXERCISES = [
     name: "Peso muerto rumano con mancuernas",
     primaryMuscles: ["Isquiotibiales", "Glúteos"],
     secondaryMuscles: ["Espalda baja"],
-    equipment: ["Mancuernas"],
+    equipment: ["mancuernas"],
     place: "gym",
     level: "intermediate",
     tips: [
@@ -305,7 +305,7 @@ export const EXERCISES = [
     name: "Saltar la cuerda",
     primaryMuscles: ["Piernas"],
     secondaryMuscles: ["Core", "Hombro"],
-    equipment: ["Cuerda"],
+    equipment: ["cuerda"],
     place: "home",
     level: "intermediate",
     tips: [

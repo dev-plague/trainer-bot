@@ -35,7 +35,8 @@ Cada perfil lleva `fuente`: OMS para el cardio, ACSM para la fuerza.
 ### 1.2 Reglas de aplicación
 
 1. **El nivel es un modificador, no un perfil aparte.** Un principiante tiene una serie menos,
-   1-2 RIR más, más descanso y **nunca** recibe ejercicios marcados como complejos.
+   +1 RIR (sin pasar de 5), +15 s de descanso y **nunca** recibe ejercicios marcados como
+   complejos.
 2. **Nadie entrena al fallo en el MVP.** El RIR mínimo es 2.
 3. **Cardio por "prueba del habla"**: moderado = puedes hablar pero no cantar. No se pide
    medir pulso.
@@ -109,15 +110,8 @@ tono cercano y sincero de Trainerbot. Ejemplo:
 
 ## 4. Pendientes al implementar E5
 
-Estos puntos no se resolvieron en la decisión y hay que cerrarlos al escribir el motor:
-
-1. **Normalizar el equipo del seed.** El catálogo todavía usa etiquetas ("Banda elástica",
-   "Barra", "Polea") y no las claves de la lista cerrada. Al escribir el motor se mapean a
-   `mancuernas`, `bandas`, `barra-de-dominadas`, `cuerda`, etc., y se tipa el campo.
-2. **Persistencia de avisos.** El plan debe guardar sus `avisos` para que sobrevivan a una
+1. **Persistencia de avisos.** El plan debe guardar sus `avisos` para que sobrevivan a una
    recarga; se añade la columna al modelo en la PR de persistencia.
-3. **Deltas exactos del nivel.** La regla dice "una serie menos, 1-2 RIR más, más descanso";
-   los números concretos se fijan en los perfiles y se prueban.
 
 ## 5. Fuentes
 
