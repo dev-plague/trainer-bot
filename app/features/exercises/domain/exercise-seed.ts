@@ -22,9 +22,11 @@ export const EQUIVALENCE_GROUPS = [
 ] as const;
 export type EquivalenceGroup = (typeof EQUIVALENCE_GROUPS)[number];
 
-const slug = z
+export const exerciseSlugSchema = z
   .string()
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "El slug debe ir en minúsculas y con guiones");
+
+const slug = exerciseSlugSchema;
 
 const textList = z.array(z.string().trim().min(1, "El texto no puede estar vacío"));
 

@@ -9,6 +9,7 @@ export default [
   route("perfil", "features/onboarding/ui/profile-details.tsx"),
   route("salud", "features/onboarding/ui/health-screening.tsx"),
   route("imc", "features/bmi/ui/bmi-screen.tsx"),
+  route("ejercicios/:slug", "features/exercises/ui/exercise-detail.tsx"),
   route("ajustes", "features/onboarding/ui/settings.tsx"),
   route("cuenta", "features/auth/ui/account.tsx"),
   route("api/auth/*", "features/auth/ui/auth-handler.ts"),
