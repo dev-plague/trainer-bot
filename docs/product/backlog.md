@@ -120,6 +120,9 @@ grupos de equivalencia y regresiones definidos.
 **Objetivo:** generar un plan semanal determinista que respete objetivo, nivel, equipo,
 lugar, tiempo y limitaciones.
 
+Las reglas de volumen, los perfiles y la cascada de equipo están en
+[`motor-de-planes.md`](motor-de-planes.md); los perfiles son datos tipados con fuente.
+
 **Criterios de aceptación:** misma entrada produce el mismo plan; sin kg; un plan generado
 se puede leer aunque cambien las reglas.
 

@@ -96,6 +96,29 @@ regresión (versión más fácil). Solo en ejercicios marcados como complejos
 - Mensaje: Trainerbot acompaña el proceso de cambio físico y personal, pero no es
   fisioterapeuta ni médico; ante cualquier molestia, acudir de inmediato a un especialista.
 
+### 3.11 Reglas del motor de planes
+
+El plan se genera con **perfiles por objetivo** (datos tipados con `fuente`), no con reglas
+sueltas. La especificación completa —incluidos descansos, cascada de equipo, avisos y pruebas
+obligatorias— está en [motor-de-planes.md](motor-de-planes.md).
+
+| Objetivo | Fuerza | Series × reps | RIR | Cardio |
+|---|---|---|---|---|
+| Salud general | 2-3 días, cuerpo completo | 2 × 10-15 | 3-4 | Progresivo hasta 150 min/semana |
+| Perder grasa | 2-3 días, cuerpo completo | 2-3 × 10-15 | 2-3 | Moderado, 2-3 días |
+| Fuerza / músculo | 3 días, completo o torso/pierna | 2-3 × 8-12 | 2-3 | Ligero, 1-2 días |
+| Resistencia | 2 días, complementaria | 1-2 × 12-15 | 3 | Mayoría del plan, por tiempo |
+
+Reglas que no se negocian:
+
+- El nivel modifica el perfil (una serie menos, más RIR, más descanso); un principiante nunca
+  recibe ejercicios complejos.
+- Nadie entrena al fallo: RIR mínimo 2. La intensidad nunca se expresa en kilos.
+- Si el equipo no alcanza, se prueba por orden: equivalencia con el equipo disponible,
+  regresión o progresión, versión de peso corporal y, si nada encaja, se omite el patrón y se
+  avisa. Nunca se inventa un ejercicio inseguro.
+- Los números son un punto de partida y se revisan con un profesional antes del lanzamiento.
+
 ## 4. Catálogo de ejercicios
 
 - Curado a mano, en base de datos, con seed versionado en git.

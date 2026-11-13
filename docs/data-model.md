@@ -164,7 +164,7 @@ Sin `source` no hay ejercicio. El seed es un archivo versionado en git.
 | `id` | text PK | |
 | `user_id` | text FK | `ON DELETE CASCADE` |
 | `status` | enum: `active`, `archived` | Un solo `active` por persona |
-| `goal` | enum: `strength`, `endurance`, `fat_loss`, `mobility` | Valores cerrados por el formulario |
+| `goal` | enum: `general_health`, `fat_loss`, `strength`, `endurance` | Perfiles de [`motor-de-planes.md`](product/motor-de-planes.md) |
 | `experience_level` | enum | |
 | `days_per_week` | integer | 2–6 |
 | `session_minutes` | integer | |
