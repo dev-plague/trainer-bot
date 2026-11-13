@@ -19,5 +19,6 @@ usuario de prueba con plan y sesión en curso.
 | `cambiar-ejercicio-movil.jpg` | Sustitución de ejercicio en panel inferior |
 | `ajustes-aviso-movil.jpg` | Aviso de guardado (Sonner) |
 | `imc-escritorio.jpg` | IMC en escritorio |
+| `tabs-antes-movil.jpg`, `tabs-despues-movil.jpg`, `tabs-despues-escritorio.jpg` | Barra de días del plan antes y después del arreglo de altura y foco |
 
 Estas capturas son documentación visual, no assets del producto.
