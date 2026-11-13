@@ -1,6 +1,7 @@
 import { Form, Link, Outlet, redirect, useLoaderData } from "react-router";
 
 import { common } from "~/content/common";
+import { exercisesText } from "~/content/exercises";
 import { plansText, prescriptionDetailText, prescriptionText, warningText } from "~/content/plans";
 import { sessionsText } from "~/content/sessions";
 import { requireReadyUser } from "~/features/onboarding";
@@ -21,6 +22,7 @@ import { PageHeader } from "~/shared/ui/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/shared/ui/tabs";
 import { getActivePlan } from "../data/active-plan";
 import { sharedDayPrescription } from "../domain/day-summary";
+import { estimatePrescriptionMinutes } from "../domain/generate";
 import type { Route } from "./+types/plan-view";
 import { RirHelp } from "./rir-help";
 
@@ -51,7 +53,9 @@ export default function PlanView() {
   const featuredDay = inProgress
     ? plan.days.find((day) => day.dayIndex === inProgress.dayIndex)
     : nextDay;
-  const featuredExercise = featuredDay?.exercises[0];
+  const featuredExercise =
+    featuredDay?.exercises.find((exercise) => exercise.prescription.kind !== "mobility") ??
+    featuredDay?.exercises[0];
   const weekComplete = !inProgress && !nextDay;
 
   return (
@@ -196,6 +200,17 @@ export default function PlanView() {
           const isCompleted = completed.has(day.dayIndex);
           const shared = sharedDayPrescription(day.exercises.map((item) => item.prescription));
           const hasStrength = day.exercises.some((item) => item.prescription.kind === "strength");
+          const mobilityMinutes = (phase: "warmup" | "cooldown") =>
+            Math.round(
+              day.exercises
+                .filter((exercise) => exercise.mobilityPhase === phase)
+                .reduce(
+                  (total, exercise) => total + estimatePrescriptionMinutes(exercise.prescription),
+                  0,
+                ),
+            );
+          const warmupMinutes = mobilityMinutes("warmup");
+          const cooldownMinutes = mobilityMinutes("cooldown");
 
           return (
             <TabsContent key={day.dayIndex} value={`day-${day.dayIndex}`} className="space-y-3">
@@ -212,6 +227,12 @@ export default function PlanView() {
                   {hasStrength ? <RirHelp /> : null}
                 </div>
               </div>
+
+              {warmupMinutes > 0 || cooldownMinutes > 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  {plansText.mobilitySummary(warmupMinutes, cooldownMinutes)}
+                </p>
+              ) : null}
 
               {shared ? (
                 <p className="rounded-xl bg-muted/60 px-3 py-2 text-sm leading-relaxed text-muted-foreground">
@@ -239,12 +260,19 @@ export default function PlanView() {
                             <ExerciseTypeIcon kind={exercise.prescription.kind} size={20} />
                           </span>
                           <div className="min-w-0 flex-1 space-y-1.5">
-                            <Link
-                              to={`/ejercicios/${exercise.slug}`}
-                              className="block truncate font-medium underline-offset-4 hover:underline"
-                            >
-                              {exercise.name}
-                            </Link>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Link
+                                to={`/ejercicios/${exercise.slug}`}
+                                className="truncate font-medium underline-offset-4 hover:underline"
+                              >
+                                {exercise.name}
+                              </Link>
+                              {exercise.mobilityPhase ? (
+                                <Badge variant="secondary">
+                                  {exercisesText.mobilityPhases[exercise.mobilityPhase]}
+                                </Badge>
+                              ) : null}
+                            </div>
                             {detail ? (
                               <p className="text-sm text-muted-foreground">{detail}</p>
                             ) : null}

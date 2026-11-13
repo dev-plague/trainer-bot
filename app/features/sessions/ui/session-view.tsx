@@ -4,16 +4,18 @@ import { z } from "zod";
 
 import { common } from "~/content/common";
 import { consentText } from "~/content/consent";
+import { exercisesText } from "~/content/exercises";
 import { plansText, prescriptionText } from "~/content/plans";
 import { sessionsText } from "~/content/sessions";
 import { requireReadyUser } from "~/features/onboarding";
+import { estimatePrescriptionMinutes } from "~/features/plans";
 import { Badge } from "~/shared/ui/badge";
 import { Button } from "~/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/shared/ui/card";
 import { ExerciseTypeBadge, MuscleBadges } from "~/shared/ui/exercise-meta";
 import { AlertIcon, SuccessIcon } from "~/shared/ui/icons";
 import { Progress } from "~/shared/ui/progress";
-import { applyRegression, completeSet } from "../data/session-actions";
+import { applyRegression, completeSet, skipCurrentExercise } from "../data/session-actions";
 import { getSessionState } from "../data/session-state";
 import {
   formatClock,
@@ -71,6 +73,10 @@ export async function action({ request, params }: Route.ActionArgs) {
     return redirect(`/sesion/${parsed.data}`);
   }
 
+  if (intent === "skip") {
+    return skipCurrentExercise(session.user.id, parsed.data);
+  }
+
   return { ok: false as const };
 }
 
@@ -101,6 +107,17 @@ export default function SessionView() {
 
   const isCardio = current.prescription.kind === "cardio";
   const isIsometric = current.prescription.kind === "isometric";
+  const isMobility = current.prescription.kind === "mobility";
+  const mobilityMinutes = current.mobilityPhase
+    ? Math.round(
+        state.exercises
+          .filter((exercise) => exercise.mobilityPhase === current.mobilityPhase)
+          .reduce(
+            (total, exercise) => total + estimatePrescriptionMinutes(exercise.prescription),
+            0,
+          ),
+      )
+    : 0;
   const isLastExercise = state.doneCount + 1 === state.total;
   const totalSets = totalSetsFor(current.prescription);
   const currentSet = setProgress(current.setsDone, totalSets);
@@ -141,6 +158,14 @@ export default function SessionView() {
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center gap-2">
               <ExerciseTypeBadge kind={current.prescription.kind} />
+              {current.mobilityPhase ? (
+                <Badge variant="secondary">
+                  {sessionsText.mobilityBlock(
+                    exercisesText.mobilityPhases[current.mobilityPhase],
+                    mobilityMinutes,
+                  )}
+                </Badge>
+              ) : null}
               <Badge variant="outline">{plansText.categories[state.category]}</Badge>
             </div>
             <MuscleBadges muscles={current.primaryMuscles} />
@@ -170,6 +195,22 @@ export default function SessionView() {
             ) : null}
           </CardContent>
         </Card>
+
+        {isMobility && current.mobilityPhase ? (
+          <Card className="border-primary/25 bg-primary/5">
+            <CardContent className="space-y-3">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {sessionsText.mobilityRecommended[current.mobilityPhase]}
+              </p>
+              <fetcher.Form method="post">
+                <input type="hidden" name="intent" value="skip" />
+                <Button type="submit" variant="outline" className="w-full" disabled={submitting}>
+                  {sessionsText.skipMobility}
+                </Button>
+              </fetcher.Form>
+            </CardContent>
+          </Card>
+        ) : null}
 
         <Card>
           <CardHeader>

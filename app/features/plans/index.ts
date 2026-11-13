@@ -24,6 +24,13 @@ export type {
 } from "./domain/day-summary";
 export { samePrescription, sharedDayPrescription } from "./domain/day-summary";
 export type { CandidateExercise } from "./domain/generate";
-export { estimateDayWorkMinutes, generatePlan } from "./domain/generate";
+export {
+  COOLDOWN_MINUTES,
+  estimateDayWorkMinutes,
+  estimateMainWorkMinutes,
+  estimatePrescriptionMinutes,
+  generatePlan,
+  WARMUP_MINUTES,
+} from "./domain/generate";
 export type { EffectiveProfile, PlanGoal, PlanProfile, Range } from "./domain/profiles";
 export { LEVEL_MODIFIERS, PLAN_GOALS, PLAN_PROFILES, profileFor } from "./domain/profiles";

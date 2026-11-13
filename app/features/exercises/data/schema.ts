@@ -9,7 +9,12 @@ import {
 } from "drizzle-orm/pg-core";
 
 import type { Equipment } from "../domain/equipment";
-import type { EquivalenceGroup, ExerciseLevel, ExercisePlace } from "../domain/exercise-seed";
+import type {
+  EquivalenceGroup,
+  ExerciseLevel,
+  ExercisePlace,
+  MobilityPhase,
+} from "../domain/exercise-seed";
 import { EXERCISE_MEASURES, type ExerciseMeasure, type MuscleGroup } from "../domain/muscles";
 
 export const exercisePlaceEnum = pgEnum("exercise_place", ["home", "gym", "outdoor"]);
@@ -35,6 +40,8 @@ export const exercise = pgTable(
     tips: text("tips").array().notNull(),
     contraindications: text("contraindications").array().notNull().default([]),
     equivalenceGroup: text("equivalence_group").$type<EquivalenceGroup>().notNull(),
+    /** Fase dentro de la sesión; solo la movilidad la declara. */
+    mobilityPhase: text("mobility_phase").$type<MobilityPhase>(),
     regressionId: text("regression_id").references((): AnyPgColumn => exercise.id, {
       onDelete: "set null",
     }),

@@ -56,7 +56,8 @@ describe("samePrescription", () => {
       samePrescription(strength, {
         kind: "mobility",
         sets: 2,
-        reps: 10,
+        seconds: { min: 60, max: 60 },
+        restSeconds: 15,
       }),
     ).toBe(false);
   });

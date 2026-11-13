@@ -2,6 +2,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import { exercise } from "~/features/exercises/data/schema";
+import type { MobilityPhase } from "~/features/exercises/domain/exercise-seed";
 import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 import type { PlanDayCategory, PlanExercisePrescription } from "~/features/plans";
 import { planDay, planExercise } from "~/features/plans/data/schema";
@@ -19,6 +20,7 @@ export type SessionExercise = {
   slug: string;
   name: string;
   tips: string[];
+  mobilityPhase: MobilityPhase | null;
   primaryMuscles: MuscleGroup[];
   isComplex: boolean;
   regression: { slug: string; name: string } | null;
@@ -64,6 +66,7 @@ export async function getSessionState(
       slug: exercise.slug,
       name: exercise.name,
       tips: exercise.tips,
+      mobilityPhase: exercise.mobilityPhase,
       primaryMuscles: exercise.primaryMuscles,
       isComplex: exercise.isComplex,
       regressionSlug: regressionExercise.slug,
@@ -85,6 +88,7 @@ export async function getSessionState(
     slug: row.slug,
     name: row.name,
     tips: row.tips,
+    mobilityPhase: row.mobilityPhase,
     primaryMuscles: row.primaryMuscles,
     isComplex: row.isComplex,
     regression:

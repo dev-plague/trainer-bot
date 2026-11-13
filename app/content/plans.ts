@@ -114,6 +114,8 @@ export const plansText = {
   continueSession: "Continúa donde quedaste",
   startDay: "Empezar este día",
   exercisesCount: (count: number) => `${count} ejercicios`,
+  mobilitySummary: (warmup: number, cooldown: number) =>
+    `Calentamiento ${warmup} min · Enfriamiento ${cooldown} min`,
   completed: "Completado",
   completedDay: "Completaste este día",
   sharedDayLabel: "Base del día",
@@ -157,8 +159,14 @@ export function prescriptionText(prescription: PlanExercisePrescription["prescri
       return `${prescription.sets} × ${prescription.seconds.min}-${prescription.seconds.max} s · ${prescription.restSeconds} s de descanso`;
     case "cardio":
       return `${prescription.minutes} min · ${plansText.intensities[prescription.intensity]}`;
-    case "mobility":
-      return `${prescription.sets} × ${prescription.reps} reps`;
+    case "mobility": {
+      const seconds =
+        prescription.seconds.min === prescription.seconds.max
+          ? String(prescription.seconds.min)
+          : `${prescription.seconds.min}-${prescription.seconds.max}`;
+
+      return `${prescription.sets} × ${seconds} s · ${prescription.restSeconds} s de descanso`;
+    }
   }
 }
 
@@ -184,6 +192,10 @@ export function warningText(warning: PlanWarning): string {
 
       return `No encontré ejercicios de ${group} para tu equipo; ese patrón quedó fuera.`;
     }
+    case "missing_mobility":
+      return warning.detail === "warmup"
+        ? "No encontré movilidad de calentamiento compatible con tus limitaciones. Puedes calentar caminando unos minutos."
+        : "No encontré movilidad de enfriamiento compatible con tus limitaciones. Puedes terminar con respiraciones lentas.";
     case "session_too_short":
       return `El día ${warning.detail ?? ""} quedó corto: menos de 10 minutos de trabajo.`;
     case "equipment_limited":

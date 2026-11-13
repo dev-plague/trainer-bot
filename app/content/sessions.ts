@@ -16,6 +16,14 @@ export const sessionsText = {
     `Aguanta al menos ${seconds} segundos, con buena forma y respirando con calma.`,
   holdDone: "Tiempo mínimo cumplido. Marca la serie cuando termines.",
   safetyTitle: "Recuerda",
+  mobilityRecommended: {
+    warmup:
+      "Calentar prepara las articulaciones que vas a usar. Puedes omitirlo, pero hacerlo reduce el riesgo de molestias.",
+    cooldown:
+      "Enfriar ayuda a bajar el ritmo y estirar lo que trabajaste. Puedes omitirlo, pero te sentará mejor hacerlo.",
+  },
+  mobilityBlock: (label: string, minutes: number) => `${label} · ${minutes} min`,
+  skipMobility: "Omitir este paso",
   tips: "Cómo hacerlo",
   muscles: "Músculos",
   done: "Hecho, siguiente",

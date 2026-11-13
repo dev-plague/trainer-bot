@@ -90,6 +90,8 @@ de lesiones, series y repeticiones (o tiempo en segundos para isométricos), y u
 "Hecho, siguiente". Las repeticiones se muestran como rango (p. ej. 10-12).
 - **Sin pesos en kg.** La intensidad se indica por esfuerzo percibido o repeticiones en
   reserva (p. ej. "termina con 2 repeticiones de reserva").
+- La sesión abre con un calentamiento de 5 min y cierra con un enfriamiento de 5 min, ambos
+  con pasos de movilidad reales. Se recomiendan y se pueden omitir; el motor no los elimina.
 - El progreso de la sesión se guarda para poder retomarla.
 
 ### 3.9 Alternativa para ejercicios complejos
@@ -122,6 +124,9 @@ Reglas que no se negocian:
   recibe ejercicios complejos.
 - Los días se segmentan por grupos musculares según cuántos elija la persona (ver §1.3 del
   documento del motor); los isométricos se prescriben en segundos.
+- Cada sesión reserva 5 min de calentamiento y 5 de enfriamiento como pasos reales de
+  movilidad elegidos por el foco del día. Ese tiempo se descuenta del trabajo principal; si
+  no cabe, se recortan ejercicios principales, nunca el calentamiento ni el enfriamiento.
 - Nadie entrena al fallo: RIR mínimo 2. La intensidad nunca se expresa en kilos.
 - Si el equipo no alcanza, se prueba por orden: equivalencia con el equipo disponible,
   regresión o progresión, versión de peso corporal y, si nada encaja, se omite el patrón y se
@@ -134,6 +139,8 @@ Reglas que no se negocian:
 - Cada ejercicio: nombre, músculos, tips, nivel, equipo, lugar, grupo de equivalencia,
   regresión opcional, bandera "complejo", contraindicaciones y `fuente`
   (guía u organismo que lo respalda: OMS, ACSM, etc.).
+- La movilidad declara además su fase (`warmup` o `cooldown`). Las entradas de calentamiento y
+  enfriamiento son sin equipo y alimentan los bloques fijos de cada sesión.
 - Las pautas generales de volumen se basan en guías de la OMS/ACSM.
 - Sin imágenes ni videos copiados de terceros en el MVP.
 - Idealmente, revisión previa al lanzamiento por un profesional (fisioterapeuta o

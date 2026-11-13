@@ -17,7 +17,7 @@ export const MIN_SESSION_MINUTES = 20;
 export const MAX_SESSION_MINUTES = 120;
 
 /** Subir esta versión cuando cambien perfiles o reglas del motor. */
-export const ENGINE_VERSION = "2";
+export const ENGINE_VERSION = "3";
 
 export const planRequestSchema = z.object({
   goal: z.enum(PLAN_GOALS),
@@ -34,6 +34,7 @@ export type PlanRequest = z.infer<typeof planRequestSchema>;
 
 export const PLAN_WARNING_CODES = [
   "missing_pattern",
+  "missing_mobility",
   "session_too_short",
   "equipment_limited",
 ] as const;
@@ -69,7 +70,8 @@ export type PlanExercisePrescription = {
     | {
         kind: "mobility";
         sets: number;
-        reps: number;
+        seconds: Range;
+        restSeconds: number;
       };
 };
 
