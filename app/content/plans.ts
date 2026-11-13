@@ -48,6 +48,7 @@ export const plansText = {
   limitationsHelp:
     "Lo uso para excluir ejercicios contraindicados. No sustituye una valoración médica.",
   submit: "Generar plan",
+  generating: "Generando plan…",
   formError: "Revisa los campos marcados.",
   planTitle: "Tu plan",
   planSubtitle: "Este es el plan que voy a seguir contigo.",
@@ -69,6 +70,12 @@ export const plansText = {
   apply: "Usar este",
   cancel: "Cancelar",
   emptyDay: "Este día quedó sin ejercicios.",
+  types: {
+    strength: "Fuerza",
+    isometric: "Isométrico",
+    cardio: "Cardio",
+    mobility: "Movilidad",
+  },
   categories: {
     full_body: "Cuerpo completo",
     upper: "Torso",
@@ -95,6 +102,11 @@ export const plansText = {
     mobility: "movilidad",
   } satisfies Record<EquivalenceGroup, string>,
   warningsTitle: "Ajustes que hice",
+  today: "Sesión de hoy",
+  continueSession: "Continúa donde quedaste",
+  nextSession: "Tu próximo entrenamiento",
+  startDay: "Empezar este día",
+  exercisesCount: (count: number) => `${count} ejercicios`,
 };
 
 export function prescriptionText(prescription: PlanExercisePrescription["prescription"]): string {

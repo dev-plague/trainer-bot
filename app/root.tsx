@@ -9,6 +9,7 @@ import {
 } from "react-router";
 
 import { common } from "~/content/common";
+import { Toaster } from "~/shared/ui/sonner";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -26,7 +27,14 @@ export function Layout({ children }: { children: ReactNode }) {
         <Links />
       </head>
       <body className="bg-background text-foreground antialiased">
+        <a
+          href="#contenido"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+        >
+          Saltar al contenido
+        </a>
         {children}
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

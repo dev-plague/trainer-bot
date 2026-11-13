@@ -5,7 +5,13 @@ import { plansText, prescriptionText, warningText } from "~/content/plans";
 import { sessionsText } from "~/content/sessions";
 import { requireReadyUser } from "~/features/onboarding";
 import { getInProgressSessionForUser } from "~/features/sessions";
+import { Badge } from "~/shared/ui/badge";
 import { Button } from "~/shared/ui/button";
+import { Card, CardContent } from "~/shared/ui/card";
+import { MuscleBadges } from "~/shared/ui/exercise-meta";
+import { AlertIcon, ArrowRightIcon, ExerciseTypeIcon, PlanIcon } from "~/shared/ui/icons";
+import { PageHeader } from "~/shared/ui/page-header";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/shared/ui/tabs";
 import { getActivePlan } from "../data/active-plan";
 import type { Route } from "./+types/plan-view";
 
@@ -28,113 +34,184 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function PlanView() {
   const { plan, inProgress } = useLoaderData<typeof loader>();
+  const featuredIndex = inProgress?.dayIndex ?? 0;
+  const featuredDay = plan.days[featuredIndex] ?? plan.days[0];
+  const featuredExercise = featuredDay?.exercises[0];
 
   return (
-    <main className="mx-auto w-full max-w-md space-y-8 px-6 py-10">
-      <div className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          {common.appName}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{plansText.planTitle}</h1>
-        <p className="text-sm text-muted-foreground">{plansText.planSubtitle}</p>
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        eyebrow={common.appName}
+        title={plansText.planTitle}
+        description={plansText.planSubtitle}
+      >
+        <div className="flex flex-wrap gap-2">
+          <Badge>{plansText.goals[plan.goal]}</Badge>
+          <Badge variant="secondary">{plansText.modesShort[plan.mode]}</Badge>
+          <Badge variant="outline">
+            {plan.daysPerWeek} {plansText.meta.days.toLowerCase()}
+          </Badge>
+          <Badge variant="outline">
+            {plan.sessionMinutes} {plansText.meta.minutes.toLowerCase()}
+          </Badge>
+        </div>
+      </PageHeader>
 
-      {inProgress ? (
-        <section className="space-y-2 rounded-lg border border-primary/30 bg-primary/5 p-4">
-          <h2 className="text-sm font-semibold">{sessionsText.inProgressTitle}</h2>
-          <p className="text-xs text-muted-foreground">{sessionsText.inProgressBody}</p>
-          <Link
-            to={`/sesion/${inProgress.id}`}
-            className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-          >
-            {sessionsText.continue} · {sessionsText.dayLabel} {inProgress.dayIndex + 1}
-          </Link>
-        </section>
+      {featuredDay ? (
+        <Card className="relative overflow-hidden border-primary/25 bg-gradient-to-br from-accent via-card to-card shadow-sm">
+          <CardContent className="space-y-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <p className="text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                  {inProgress ? plansText.continueSession : plansText.today}
+                </p>
+                <h2 className="text-xl font-semibold tracking-tight">
+                  {plansText.dayLabel} {featuredDay.dayIndex + 1} ·{" "}
+                  {plansText.categories[featuredDay.category]}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {plansText.exercisesCount(featuredDay.exercises.length)}
+                </p>
+              </div>
+              <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <PlanIcon size={26} />
+              </span>
+            </div>
+
+            {featuredExercise ? (
+              <div className="flex items-center gap-3 rounded-xl border bg-background/70 p-3">
+                <span className="inline-flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
+                  <ExerciseTypeIcon kind={featuredExercise.prescription.kind} size={18} />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{featuredExercise.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {prescriptionText(featuredExercise.prescription)}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+
+            {inProgress ? (
+              <Button asChild size="lg" className="w-full gap-2">
+                <Link to={`/sesion/${inProgress.id}`}>
+                  {sessionsText.continue}
+                  <ArrowRightIcon size={18} />
+                </Link>
+              </Button>
+            ) : (
+              <Form method="post" action="/sesion/nueva">
+                <input type="hidden" name="planDayId" value={featuredDay.id} />
+                <Button type="submit" size="lg" className="w-full gap-2">
+                  {plansText.startDay}
+                  <ArrowRightIcon size={18} />
+                </Button>
+              </Form>
+            )}
+          </CardContent>
+        </Card>
       ) : null}
-
-      <dl className="grid grid-cols-2 gap-3 rounded-lg border border-border p-4 text-sm">
-        <div>
-          <dt className="text-muted-foreground">{plansText.meta.goal}</dt>
-          <dd className="font-medium">{plansText.goals[plan.goal]}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground">{plansText.meta.mode}</dt>
-          <dd className="font-medium">{plansText.modesShort[plan.mode]}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground">{plansText.meta.days}</dt>
-          <dd className="font-medium">{plan.daysPerWeek}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground">{plansText.meta.minutes}</dt>
-          <dd className="font-medium">{plan.sessionMinutes}</dd>
-        </div>
-      </dl>
 
       {plan.warnings.length > 0 ? (
-        <section className="space-y-2 rounded-lg border border-border bg-muted/40 p-4">
-          <h2 className="text-sm font-semibold">{plansText.warningsTitle}</h2>
-          <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
-            {plan.warnings.map((warning) => (
-              <li key={`${warning.code}-${warning.detail ?? ""}`}>{warningText(warning)}</li>
-            ))}
-          </ul>
-        </section>
+        <Card className="border-warning/40 bg-warning/5">
+          <CardContent className="flex gap-3">
+            <AlertIcon size={20} className="mt-0.5 shrink-0 text-warning" />
+            <div className="space-y-1">
+              <h2 className="text-sm font-semibold">{plansText.warningsTitle}</h2>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                {plan.warnings.map((warning) => (
+                  <li key={`${warning.code}-${warning.detail ?? ""}`}>{warningText(warning)}</li>
+                ))}
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
       ) : null}
 
-      <div className="space-y-6">
+      <Tabs defaultValue={`day-${featuredIndex}`} className="gap-4">
+        <TabsList
+          className="grid h-auto w-full gap-1 rounded-xl bg-muted p-1"
+          style={{ gridTemplateColumns: `repeat(${plan.days.length}, minmax(0, 1fr))` }}
+        >
+          {plan.days.map((day) => (
+            <TabsTrigger
+              key={day.dayIndex}
+              value={`day-${day.dayIndex}`}
+              className="min-h-11 gap-1 px-1 text-xs"
+            >
+              <span className="text-xs text-muted-foreground">{plansText.dayLabel}</span>
+              {day.dayIndex + 1}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
         {plan.days.map((day) => (
-          <section key={day.dayIndex} className="space-y-3">
-            <h2 className="text-sm font-semibold">
-              {plansText.dayLabel} {day.dayIndex + 1} · {plansText.categories[day.category]}
-            </h2>
+          <TabsContent key={day.dayIndex} value={`day-${day.dayIndex}`} className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold">{plansText.categories[day.category]}</h2>
+              <Badge variant="outline">{plansText.exercisesCount(day.exercises.length)}</Badge>
+            </div>
 
             {day.exercises.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{plansText.emptyDay}</p>
+              <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">
+                {plansText.emptyDay}
+              </p>
             ) : (
               <ul className="space-y-2">
                 {day.exercises.map((exercise) => (
                   <li
                     key={exercise.slug}
-                    className="rounded-lg border border-border p-4 transition-colors hover:bg-muted/40"
+                    className="rounded-xl border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
                   >
-                    <Link
-                      to={`/ejercicios/${exercise.slug}`}
-                      className="font-medium underline-offset-4 hover:underline"
-                    >
-                      {exercise.name}
-                    </Link>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {prescriptionText(exercise.prescription)}
-                    </p>
+                    <div className="flex items-start gap-3">
+                      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-foreground">
+                        <ExerciseTypeIcon kind={exercise.prescription.kind} size={20} />
+                      </span>
+                      <div className="min-w-0 flex-1 space-y-1.5">
+                        <Link
+                          to={`/ejercicios/${exercise.slug}`}
+                          className="block truncate font-medium underline-offset-4 hover:underline"
+                        >
+                          {exercise.name}
+                        </Link>
+                        <p className="text-sm text-muted-foreground">
+                          {prescriptionText(exercise.prescription)}
+                        </p>
+                        <MuscleBadges muscles={exercise.primaryMuscles} max={2} />
+                      </div>
+                    </div>
+
                     {plan.mode === "flexible" ? (
-                      <Link
-                        to={`/plan/ejercicio/${exercise.planExerciseId}`}
-                        className="mt-2 inline-block text-xs font-medium text-primary underline-offset-4 hover:underline"
-                      >
-                        {plansText.change}
-                      </Link>
+                      <div className="mt-3 flex justify-end">
+                        <Button asChild variant="ghost" size="sm">
+                          <Link to={`/plan/ejercicio/${exercise.planExerciseId}`}>
+                            {plansText.change}
+                          </Link>
+                        </Button>
+                      </div>
                     ) : null}
                   </li>
                 ))}
               </ul>
             )}
 
-            {day.exercises.length > 0 ? (
+            {day.exercises.length > 0 && inProgress?.dayIndex !== day.dayIndex ? (
               <Form method="post" action="/sesion/nueva">
                 <input type="hidden" name="planDayId" value={day.id} />
-                <Button type="submit" variant="secondary" size="sm">
+                <Button type="submit" variant="outline" className="w-full">
                   {sessionsText.start}
                 </Button>
               </Form>
             ) : null}
-          </section>
+          </TabsContent>
         ))}
-      </div>
+      </Tabs>
 
-      <Button asChild variant="outline" className="w-full">
-        <Link to="/plan/nuevo">{plansText.regenerate}</Link>
-      </Button>
-    </main>
+      <div className="flex flex-col gap-2">
+        <Button asChild variant="ghost">
+          <Link to="/plan/nuevo">{plansText.regenerate}</Link>
+        </Button>
+      </div>
+    </div>
   );
 }

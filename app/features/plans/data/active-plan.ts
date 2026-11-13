@@ -2,6 +2,7 @@ import { and, asc, eq, inArray } from "drizzle-orm";
 
 import type { Equipment, ExerciseLevel, ExercisePlace } from "~/features/exercises";
 import { exercise } from "~/features/exercises/data/schema";
+import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 import { db } from "~/shared/db/client";
 import type {
   PlanDayCategory,
@@ -17,6 +18,7 @@ export type ActivePlanExercise = {
   slug: string;
   name: string;
   position: number;
+  primaryMuscles: MuscleGroup[];
   prescription: PlanExercisePrescription["prescription"];
 };
 
@@ -67,6 +69,7 @@ export async function getActivePlan(userId: string): Promise<ActivePlan | null> 
             dayId: planExercise.planDayId,
             position: planExercise.position,
             prescription: planExercise.prescription,
+            primaryMuscles: exercise.primaryMuscles,
             slug: exercise.slug,
             name: exercise.name,
           })
@@ -86,6 +89,7 @@ export async function getActivePlan(userId: string): Promise<ActivePlan | null> 
       slug: item.slug,
       name: item.name,
       position: item.position,
+      primaryMuscles: item.primaryMuscles,
       prescription: item.prescription,
     });
     byDay.set(item.dayId, list);

@@ -3,6 +3,7 @@ export const common = {
   tagline: "Tu entrenador personal, sincero y sin humo.",
   notAi:
     "No soy una IA: soy un programa que aplica reglas sobre un catálogo de ejercicios curado. Sin chat y sin promesas raras.",
+  welcomeCard: "Un plan ajustado a tu tiempo, tu equipo y cómo te sientes hoy. Sin promesas raras.",
   createAccount: "Crear cuenta",
   login: "Entrar",
   greetings: {

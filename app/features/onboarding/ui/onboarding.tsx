@@ -4,6 +4,8 @@ import { z } from "zod";
 import { common } from "~/content/common";
 import { onboardingText } from "~/content/onboarding";
 import { Button } from "~/shared/ui/button";
+import { Card, CardContent } from "~/shared/ui/card";
+import { PageHeader } from "~/shared/ui/page-header";
 import { requireOnboardingSession } from "../data/guards";
 import { getProfile, saveProfile } from "../data/profile";
 import { profileSetupSchema } from "../domain/profile";
@@ -47,26 +49,24 @@ export default function Onboarding() {
   const errors = actionData?.fieldErrors;
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
-      <div className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          {common.appName}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {onboardingText.preferredName.title}
-        </h1>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {onboardingText.preferredName.subtitle}
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-md space-y-8 px-6 py-10">
+      <PageHeader
+        eyebrow={common.appName}
+        title={onboardingText.preferredName.title}
+        description={onboardingText.preferredName.subtitle}
+      />
 
-      <Form method="post" className="space-y-6" noValidate>
-        <PreferredNameFields errors={errors} />
+      <Card>
+        <CardContent>
+          <Form method="post" className="space-y-6" noValidate>
+            <PreferredNameFields errors={errors} />
 
-        <Button type="submit" size="lg" className="w-full">
-          {onboardingText.preferredName.submit}
-        </Button>
-      </Form>
-    </main>
+            <Button type="submit" size="lg" className="w-full">
+              {onboardingText.preferredName.submit}
+            </Button>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

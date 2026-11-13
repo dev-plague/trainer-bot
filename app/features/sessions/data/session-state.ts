@@ -2,6 +2,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import { exercise } from "~/features/exercises/data/schema";
+import type { MuscleGroup } from "~/features/exercises/domain/muscles";
 import type { PlanDayCategory, PlanExercisePrescription } from "~/features/plans";
 import { planDay, planExercise } from "~/features/plans/data/schema";
 import { db } from "~/shared/db/client";
@@ -17,7 +18,7 @@ export type SessionExercise = {
   slug: string;
   name: string;
   tips: string[];
-  primaryMuscles: string[];
+  primaryMuscles: MuscleGroup[];
   isComplex: boolean;
   regression: { slug: string; name: string } | null;
 };

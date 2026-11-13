@@ -3,7 +3,10 @@ import { data, Form, Link, redirect, useActionData, useLoaderData } from "react-
 import { common } from "~/content/common";
 import { healthText } from "~/content/health";
 import { Button } from "~/shared/ui/button";
+import { Card, CardContent } from "~/shared/ui/card";
 import { FormError } from "~/shared/ui/form";
+import { AlertIcon } from "~/shared/ui/icons";
+import { PageHeader } from "~/shared/ui/page-header";
 import { requireCompleteProfile } from "../data/guards";
 import { getScreening, saveScreening } from "../data/health";
 import {
@@ -61,74 +64,83 @@ export default function HealthScreening() {
   const result = useLoaderData<typeof loader>();
 
   if (result.mode === "result") {
-    return (
-      <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-6 py-12">
-        <div className="space-y-3">
-          <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-            {common.appName}
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight">{healthText.result.title}</h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">{healthText.result.body}</p>
-          <p className="text-xs text-muted-foreground">{healthText.result.saved}</p>
-        </div>
-
-        <Button asChild variant="outline" className="w-full">
-          <Link to="/cuenta">{healthText.result.account}</Link>
-        </Button>
-      </main>
-    );
+    return <Referral />;
   }
 
   return <ScreeningForm />;
+}
+
+function Referral() {
+  return (
+    <div className="mx-auto w-full max-w-md space-y-6 px-6 py-10">
+      <PageHeader
+        eyebrow={common.appName}
+        title={healthText.result.title}
+        description={healthText.result.body}
+      />
+
+      <Card className="border-warning/40 bg-warning/5">
+        <CardContent className="flex gap-3">
+          <AlertIcon size={22} className="mt-0.5 shrink-0 text-warning" />
+          <p className="text-sm leading-relaxed text-muted-foreground">{healthText.result.saved}</p>
+        </CardContent>
+      </Card>
+
+      <Button asChild variant="outline" className="w-full">
+        <Link to="/cuenta">{healthText.result.account}</Link>
+      </Button>
+    </div>
+  );
 }
 
 function ScreeningForm() {
   const actionData = useActionData<typeof action>();
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
-      <div className="space-y-2">
-        <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          {common.appName}
-        </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{healthText.title}</h1>
-        <p className="text-sm leading-relaxed text-muted-foreground">{healthText.subtitle}</p>
-      </div>
+    <div className="mx-auto w-full max-w-md space-y-6 px-6 py-10">
+      <PageHeader
+        eyebrow={common.appName}
+        title={healthText.title}
+        description={healthText.subtitle}
+      />
 
-      <Form method="post" className="space-y-4" noValidate>
+      <Form method="post" className="space-y-3" noValidate>
         <FormError message={actionData?.error} />
 
         {PARQ_QUESTION_IDS.map((id, index) => (
-          <fieldset key={id} className="space-y-2 rounded-lg border border-border p-4">
-            <legend className="px-1 text-sm font-medium">
-              {index + 1}. {healthText.questions[id]}
-            </legend>
-            <div className="flex gap-6">
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  name={id}
-                  value="yes"
-                  required
-                  className="size-4 accent-primary"
-                />
-                {healthText.yes}
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="radio" name={id} value="no" className="size-4 accent-primary" />
-                {healthText.no}
-              </label>
-            </div>
-          </fieldset>
+          <Card key={id}>
+            <CardContent className="space-y-3">
+              <p className="text-sm leading-relaxed font-medium">
+                <span className="mr-1.5 text-muted-foreground">{index + 1}.</span>
+                {healthText.questions[id]}
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border text-sm transition-colors has-checked:border-primary has-checked:bg-primary/5">
+                  <input
+                    type="radio"
+                    name={id}
+                    value="yes"
+                    required
+                    className="size-4 accent-primary"
+                  />
+                  {healthText.yes}
+                </label>
+                <label className="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border text-sm transition-colors has-checked:border-primary has-checked:bg-primary/5">
+                  <input type="radio" name={id} value="no" className="size-4 accent-primary" />
+                  {healthText.no}
+                </label>
+              </div>
+            </CardContent>
+          </Card>
         ))}
 
-        <div className="space-y-3">
+        <div className="space-y-3 pt-1">
           <Button type="submit" size="lg" className="w-full">
             {healthText.submit}
           </Button>
           <p className="text-center text-xs text-muted-foreground">{healthText.sourceNote}</p>
         </div>
       </Form>
-    </main>
+    </div>
   );
 }
