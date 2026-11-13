@@ -247,9 +247,9 @@ export default function SessionView() {
           </Card>
         ) : null}
 
-        <Card className="border-warning/35 bg-warning/5">
+        <Card className="border-border bg-muted">
           <CardContent className="flex gap-3">
-            <AlertIcon size={20} className="mt-0.5 shrink-0 text-warning" />
+            <AlertIcon size={20} className="mt-0.5 shrink-0 text-muted-foreground" />
             <div className="space-y-1">
               <h2 className="text-xs font-semibold tracking-[0.1em] uppercase">
                 {sessionsText.safetyTitle}

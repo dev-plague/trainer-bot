@@ -130,7 +130,7 @@ export default function Account() {
 
       <Card className="overflow-hidden">
         <CardContent className="flex items-center gap-4">
-          <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
+          <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
             <AccountIcon size={26} />
           </span>
           <div className="min-w-0 space-y-1">
@@ -150,7 +150,7 @@ export default function Account() {
           <Link
             key={to}
             to={to}
-            className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-accent"
+            className="flex min-h-16 items-center gap-3 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:bg-muted"
           >
             <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted">
               <Icon size={20} />

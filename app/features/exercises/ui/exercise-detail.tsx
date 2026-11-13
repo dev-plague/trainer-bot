@@ -121,10 +121,10 @@ export default function ExerciseDetail() {
       </Card>
 
       {exercise.contraindications.length > 0 ? (
-        <Card className="border-warning/40 bg-warning/5">
+        <Card className="border-border bg-muted">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <AlertIcon size={18} className="text-warning" />
+              <AlertIcon size={18} className="text-muted-foreground" />
               {exercisesText.contraindications}
             </CardTitle>
           </CardHeader>

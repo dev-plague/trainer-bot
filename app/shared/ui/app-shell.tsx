@@ -29,7 +29,7 @@ export default function AppShell() {
                   cn(
                     "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-accent text-accent-foreground"
+                      ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )
                 }
@@ -45,7 +45,7 @@ export default function AppShell() {
                 cn(
                   "ml-1 inline-flex size-10 items-center justify-center rounded-lg transition-colors",
                   isActive
-                    ? "bg-accent text-accent-foreground"
+                    ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )
               }
@@ -84,7 +84,7 @@ export default function AppShell() {
                   <span
                     className={cn(
                       "inline-flex size-9 items-center justify-center rounded-full transition-colors",
-                      isActive ? "bg-accent" : "",
+                      isActive ? "bg-primary text-primary-foreground" : "",
                     )}
                   >
                     <Icon size={20} />

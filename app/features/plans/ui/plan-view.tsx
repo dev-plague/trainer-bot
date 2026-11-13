@@ -78,34 +78,36 @@ export default function PlanView() {
       </PageHeader>
 
       {featuredDay ? (
-        <Card className="relative overflow-hidden border-primary/25 bg-gradient-to-br from-accent via-card to-card shadow-sm">
+        <Card className="relative overflow-hidden border-primary/25 bg-primary-surface text-primary-surface-foreground shadow-sm">
           <CardContent className="space-y-5">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <p className="text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                <p className="text-xs font-semibold tracking-[0.16em] text-accent-soft uppercase">
                   {inProgress ? plansText.continueSession : plansText.nextSession}
                 </p>
-                <h2 className="text-xl font-semibold tracking-tight">
+                <h2 className="text-xl font-semibold tracking-tight text-primary-surface-foreground">
                   {plansText.dayLabel} {featuredDay.dayIndex + 1} ·{" "}
                   {plansText.categories[featuredDay.category]}
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-accent-soft">
                   {plansText.exercisesCount(featuredDay.exercises.length)}
                 </p>
               </div>
-              <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary-surface-foreground/10 text-accent-soft">
                 <PlanIcon size={26} />
               </span>
             </div>
 
             {featuredExercise ? (
-              <div className="flex items-center gap-3 rounded-xl border bg-background/70 p-3">
-                <span className="inline-flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">
+              <div className="flex items-center gap-3 rounded-xl border border-primary-surface-foreground/20 bg-primary-surface-foreground/10 p-3">
+                <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary-surface-foreground/10 text-primary-surface-foreground">
                   <ExerciseTypeIcon kind={featuredExercise.prescription.kind} size={18} />
                 </span>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{featuredExercise.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">
+                  <p className="truncate text-sm font-medium text-primary-surface-foreground">
+                    {featuredExercise.name}
+                  </p>
+                  <p className="truncate text-xs text-accent-soft">
                     {prescriptionText(featuredExercise.prescription)}
                   </p>
                 </div>
@@ -149,9 +151,9 @@ export default function PlanView() {
       ) : null}
 
       {plan.warnings.length > 0 ? (
-        <Card className="border-warning/40 bg-warning/5">
+        <Card className="border-border bg-muted">
           <CardContent className="flex gap-3">
-            <AlertIcon size={20} className="mt-0.5 shrink-0 text-warning" />
+            <AlertIcon size={20} className="mt-0.5 shrink-0 text-muted-foreground" />
             <div className="space-y-1">
               <h2 className="text-sm font-semibold">{plansText.warningsTitle}</h2>
               <ul className="space-y-1 text-sm text-muted-foreground">
@@ -185,11 +187,16 @@ export default function PlanView() {
                 className="min-h-11 gap-1 px-1 text-xs"
               >
                 {isCompleted ? (
-                  <span aria-hidden="true" className="inline-flex text-success">
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex text-success group-data-[state=active]/tab:text-primary-surface-foreground"
+                  >
                     <CheckIcon size={14} />
                   </span>
                 ) : null}
-                <span className="text-xs text-muted-foreground">{plansText.dayLabel}</span>
+                <span className="text-xs text-muted-foreground group-data-[state=active]/tab:text-primary-surface-foreground">
+                  {plansText.dayLabel}
+                </span>
                 {day.dayIndex + 1}
               </TabsTrigger>
             );

@@ -2,11 +2,11 @@
 
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 
-/** Toaster de Sonner con los tokens del proyecto y sin tema oscuro. */
+/** Toaster de Sonner con los tokens del proyecto y el tema del sistema. */
 function Toaster(props: ToasterProps) {
   return (
     <Sonner
-      theme="light"
+      theme="system"
       position="top-center"
       className="toaster group"
       style={
@@ -14,6 +14,10 @@ function Toaster(props: ToasterProps) {
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
+          "--success-bg": "var(--primary)",
+          "--success-text": "var(--primary-foreground)",
+          "--error-bg": "var(--destructive)",
+          "--error-text": "var(--destructive-foreground)",
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }

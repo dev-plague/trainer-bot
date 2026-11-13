@@ -1,8 +1,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* La app es solo clara: el modo oscuro exige la clase .dark, no la preferencia del sistema. */
-@custom-variant dark (&:where(.dark, .dark *));
+/*
+ * El modo oscuro sigue la preferencia del sistema. La clase .dark permite
+ * forzarlo y .light permite ignorar la preferencia mientras se prueba el tema.
+ */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:not(.light, .light *)) {
+      @slot;
+    }
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -13,19 +25,22 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-surface: var(--primary-surface);
+  --color-primary-surface-foreground: var(--primary-surface-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
-  --color-warning: var(--warning);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -38,34 +53,141 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+/*
+ * Paleta «Arcilla y pino». Los valores viven solo aquí: los componentes usan
+ * utilidades de Tailwind (bg-accent, text-primary, etc.), nunca hex sueltos.
+ */
 :root {
-  --background: oklch(0.985 0.004 160);
-  --foreground: oklch(0.18 0.012 160);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.012 160);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.012 160);
-  --primary: oklch(0.52 0.13 160);
-  --primary-foreground: oklch(0.995 0 0);
-  --secondary: oklch(0.955 0.012 160);
-  --secondary-foreground: oklch(0.28 0.02 160);
-  --accent: oklch(0.935 0.028 160);
-  --accent-foreground: oklch(0.24 0.02 160);
-  --muted: oklch(0.96 0.008 160);
-  --muted-foreground: oklch(0.48 0.015 160);
-  --border: oklch(0.9 0.01 160);
-  --input: oklch(0.88 0.01 160);
-  --ring: oklch(0.6 0.1 160);
-  --destructive: oklch(0.55 0.2 27);
-  --destructive-foreground: oklch(0.995 0 0);
-  --success: oklch(0.58 0.12 150);
-  --warning: oklch(0.72 0.14 75);
-  --chart-1: oklch(0.56 0.12 160);
-  --chart-2: oklch(0.62 0.1 200);
-  --chart-3: oklch(0.7 0.14 75);
-  --chart-4: oklch(0.6 0.16 30);
-  --chart-5: oklch(0.55 0.08 280);
+  color-scheme: light;
+
+  --background: #f6f1ea;
+  --foreground: #23201c;
+  --card: #fffdf9;
+  --card-foreground: #23201c;
+  --popover: #fffdf9;
+  --popover-foreground: #23201c;
+
+  /* Pino: estructura, navegación y estados activos. */
+  --primary: #0f5c5c;
+  --primary-foreground: #ffffff;
+  /* Pino profundo para superficies grandes, como «Tu próxima sesión». */
+  --primary-surface: #0f5c5c;
+  --primary-surface-foreground: #ffffff;
+
+  /* Terracota: acción principal y progreso. */
+  --accent: #b8472f;
+  --accent-foreground: #ffffff;
+  --accent-soft: #f6cdbe;
+
+  --secondary: #ede5da;
+  --secondary-foreground: #23201c;
+  --muted: #ede5da;
+  --muted-foreground: #6e655b;
+  --border: #e5dacb;
+  --input: #8f8171;
+  --ring: #b8472f;
+  --overlay: rgb(35 32 28 / 0.55);
+
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --success: #0f5c5c;
+
+  --chart-1: #0f5c5c;
+  --chart-2: #b8472f;
+  --chart-3: #6e655b;
+  --chart-4: #8f8171;
+  --chart-5: #e5dacb;
   --radius: 0.75rem;
+}
+
+/*
+ * Modo oscuro propio: no es una inversión del claro. Se aplica con la
+ * preferencia del sistema (salvo que haya .light) o con la clase .dark.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+
+    --background: #14110f;
+    --foreground: #f3ece2;
+    --card: #1e1a17;
+    --card-foreground: #f3ece2;
+    --popover: #1e1a17;
+    --popover-foreground: #f3ece2;
+
+    --primary: #4fb3a9;
+    --primary-foreground: #0b1f1e;
+    /* Superficie pino oscura: evita una masa clara sobre el fondo. */
+    --primary-surface: #123a3a;
+    --primary-surface-foreground: #f3ece2;
+
+    --accent: #e07a5f;
+    --accent-foreground: #1a0e0a;
+    --accent-soft: #f0b7a4;
+
+    --secondary: #2a2420;
+    --secondary-foreground: #f3ece2;
+    --muted: #2a2420;
+    --muted-foreground: #a89e91;
+    --border: #332d27;
+    /* El valor de la tabla (#6B5F54) daba 2,79:1 sobre la tarjeta; se subió a 3,45:1. */
+    --input: #7a6d61;
+    --ring: #e07a5f;
+    --overlay: rgb(0 0 0 / 0.7);
+
+    --destructive: #f2877b;
+    --destructive-foreground: #1a0e0a;
+    --success: #4fb3a9;
+
+    --chart-1: #4fb3a9;
+    --chart-2: #e07a5f;
+    --chart-3: #a89e91;
+    --chart-4: #f0b7a4;
+    --chart-5: #332d27;
+  }
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #14110f;
+  --foreground: #f3ece2;
+  --card: #1e1a17;
+  --card-foreground: #f3ece2;
+  --popover: #1e1a17;
+  --popover-foreground: #f3ece2;
+
+  --primary: #4fb3a9;
+  --primary-foreground: #0b1f1e;
+  --primary-surface: #123a3a;
+  --primary-surface-foreground: #f3ece2;
+
+  --accent: #e07a5f;
+  --accent-foreground: #1a0e0a;
+  --accent-soft: #f0b7a4;
+
+  --secondary: #2a2420;
+  --secondary-foreground: #f3ece2;
+  --muted: #2a2420;
+  --muted-foreground: #a89e91;
+  --border: #332d27;
+  --input: #7a6d61;
+  --ring: #e07a5f;
+  --overlay: rgb(0 0 0 / 0.7);
+
+  --destructive: #f2877b;
+  --destructive-foreground: #1a0e0a;
+  --success: #4fb3a9;
+
+  --chart-1: #4fb3a9;
+  --chart-2: #e07a5f;
+  --chart-3: #a89e91;
+  --chart-4: #f0b7a4;
+  --chart-5: #332d27;
+}
+
+.light {
+  color-scheme: light;
 }
 
 @layer base {
@@ -74,7 +196,6 @@
   }
 
   html {
-    color-scheme: light;
     scroll-behavior: smooth;
   }
 
