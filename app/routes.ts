@@ -11,6 +11,8 @@ export default [
   route("imc", "features/bmi/ui/bmi-screen.tsx"),
   route("plan", "features/plans/ui/plan-view.tsx"),
   route("plan/nuevo", "features/plans/ui/plan-form.tsx"),
+  route("sesion/nueva", "features/sessions/ui/session-start.ts"),
+  route("sesion/:id", "features/sessions/ui/session-view.tsx"),
   route("ejercicios/:slug", "features/exercises/ui/exercise-detail.tsx"),
   route("ajustes", "features/onboarding/ui/settings.tsx"),
   route("cuenta", "features/auth/ui/account.tsx"),

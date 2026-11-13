@@ -20,6 +20,7 @@ export type ActivePlanExercise = {
 };
 
 export type ActivePlanDay = {
+  id: string;
   dayIndex: number;
   category: PlanDayCategory;
   exercises: ActivePlanExercise[];
@@ -100,6 +101,7 @@ export async function getActivePlan(userId: string): Promise<ActivePlan | null> 
     warnings: row.warnings,
     engineVersion: row.engineVersion,
     days: days.map((day) => ({
+      id: day.id,
       dayIndex: day.dayIndex,
       category: day.category,
       exercises: byDay.get(day.id) ?? [],

@@ -2,7 +2,9 @@ import { redirect } from "react-router";
 
 import { getCurrentSession } from "~/features/auth";
 import { missingConsents } from "../domain/consents";
+import { PARQ_VERSION } from "../domain/parq";
 import { getAcceptedConsents } from "./consents";
+import { getScreening } from "./health";
 import { getProfile } from "./profile";
 
 /**
@@ -40,4 +42,19 @@ export async function requireCompleteProfile(request: Request, next: string) {
   }
 
   return { session, profile };
+}
+
+/**
+ * Onboarding completo: sesión, consentimientos, perfil y cuestionario vigente.
+ * Es la puerta para ver el plan y entrenar.
+ */
+export async function requireReadyUser(request: Request, next: string) {
+  const result = await requireCompleteProfile(request, next);
+  const screening = await getScreening(result.session.user.id);
+
+  if (!screening || screening.questionnaireVersion !== PARQ_VERSION) {
+    throw redirect("/salud");
+  }
+
+  return result;
 }

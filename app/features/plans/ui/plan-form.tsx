@@ -5,11 +5,11 @@ import { common } from "~/content/common";
 import { equipmentLabel } from "~/content/exercises";
 import { plansText } from "~/content/plans";
 import { EQUIPMENT } from "~/features/exercises/domain/equipment";
+import { requireReadyUser } from "~/features/onboarding";
 import { Button } from "~/shared/ui/button";
 import { FieldError, FormError } from "~/shared/ui/form";
 import { Select } from "~/shared/ui/select";
 import { generatePlanForUser } from "../data/generate-service";
-import { requirePlanReady } from "../data/guards";
 import { planRequestSchema } from "../domain/contract";
 import type { Route } from "./+types/plan-form";
 
@@ -23,13 +23,13 @@ export function meta() {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  await requirePlanReady(request, "/plan/nuevo");
+  await requireReadyUser(request, "/plan/nuevo");
 
   return null;
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const session = await requirePlanReady(request, "/plan/nuevo");
+  const { session } = await requireReadyUser(request, "/plan/nuevo");
   const formData = await request.formData();
   const parsed = planRequestSchema.safeParse({
     goal: formData.get("goal"),
