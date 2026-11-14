@@ -9,8 +9,20 @@ aplica reglas sobre un catálogo curado de ejercicios. No hay chat ni LLM.
 
 ## Estado
 
-Iteración 1 — fundaciones: scaffolding de React Router, base de datos y CI. Todavía no hay
-producto usable.
+**MVP entregado** (13 de noviembre de 2026). Todo el alcance del brief (§2) está implementado
+y mergeado en `main`:
+
+- Cuenta con Better Auth (correo y contraseña), consentimientos y borrado inmediato.
+- Onboarding con nombre preferido, forma de trato, perfil y cuestionario PAR-Q.
+- IMC explicado solo para mayores de 18, con rango saludable y meta intermedia.
+- Catálogo curado de 52 entradas (44 ejercicios y 8 pasos de movilidad), con fuente, ficha de
+  detalle y equivalencias.
+- Motor determinista (`engine_version` 3): perfiles por objetivo, segmentación por días,
+  cascada de equipo y modo flexible.
+- Sesión guiada con calentamiento y enfriamiento, progreso reanudable y regresión.
+
+Queda el despliegue y, antes de abrirlo al público, la revisión profesional del catálogo y del
+motor. El estado por épica está en [el backlog](docs/product/backlog.md).
 
 ## Empezar
 

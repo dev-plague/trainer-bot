@@ -1,11 +1,11 @@
 # Viabilidad y riesgos del stack
 
-> **Estado:** propuesta · **Fecha de verificación:** 2026-11-12 · **Issue:** #1
+> **Estado:** aplicado · **Fecha de verificación:** 2026-11-12 · **Issue:** #1
 
-Este documento confirma, con fuentes, las tres preguntas abiertas del brief (§5): la
+Este documento confirmó, con fuentes, las tres preguntas abiertas del brief (§5): la
 compatibilidad de Bun con React Router v8, el estado real de Drizzle 1.0 y el runtime que
-usaremos en desarrollo y producción. Las versiones se consultaron en el registro de npm el
-2026-11-12; no se instaló nada aún.
+usaríamos en desarrollo y producción. Las versiones se consultaron en el registro de npm el
+2026-11-12; el stack se instaló y rige el MVP desde entonces (ver `package.json`).
 
 ## 1. Versiones estables verificadas
 
@@ -35,7 +35,7 @@ Entorno local medido: Bun 1.4.2 (reporta `process.versions.node = 26.3.0`) y Nod
 
 ## 2. Bun: gestor de paquetes sí, runtime del servidor no (por ahora)
 
-**Decisión propuesta: Bun como gestor de paquetes y ejecutor de scripts; Node como runtime
+**Decisión: Bun como gestor de paquetes y ejecutor de scripts; Node como runtime
 de React Router y del servidor.**
 
 Lo verificado:
@@ -65,7 +65,7 @@ Consecuencias prácticas:
 El `dist-tag latest` de `drizzle-orm` es **0.45.4** y el de `drizzle-kit` **0.31.11**. La
 1.0 existe solo como `1.0.0-rc.5` (etiqueta `rc`) y decenas de builds beta por rama.
 
-**Decisión propuesta: usar 0.45.4 / 0.31.11 en el MVP.** Adoptar una RC fija antes de tener
+**Decisión: usar 0.45.4 / 0.31.11 en el MVP.** Adoptar una RC fija antes de tener
 esquema es asumir migraciones de una versión que aún cambia; el brief pedía confirmarlo, no
 forzarlo. El acceso a datos queda aislado en `data/`, así que el salto a 1.0 será local a esa
 capa cuando 1.0 llegue a `latest`.
@@ -77,7 +77,7 @@ capa cuando 1.0 llegue a `latest`.
 separado `@better-auth/drizzle-adapter@1.7.22`, que la documentación más reciente muestra
 como instalación recomendada.
 
-**Decisión propuesta:** usar el export incluido (`better-auth/adapters/drizzle`) para no
+**Decisión:** usar el export incluido (`better-auth/adapters/drizzle`) para no
 añadir una dependencia más, e importar `betterAuth` desde `better-auth/minimal` para no
 arrastrar el código de proveedores que no usamos. Si al integrar la documentación vigente
 exige el paquete separado, se cambia en esa PR y se anota en el ADR 0001.
@@ -102,10 +102,11 @@ de verdad son nuestras migraciones.
 
 ## 6. Lo que este documento no resuelve
 
-- Plataforma de despliegue y versión exacta de PostgreSQL en producción (depende de dónde
-  se aloje; se decide antes del primer despliegue).
+- Plataforma de despliegue y versión exacta de PostgreSQL en producción: decididas en
+  [`docs/deployment.md`](../deployment.md) (VPS con Dokploy y PostgreSQL 18).
 - Si conviene un monorepo o un solo paquete (el MVP cabe en uno; ver `docs/architecture.md`).
-- Rendimiento del motor de planes con catálogo real: se mide cuando exista el seed.
+- Rendimiento del motor con un catálogo grande: hoy son 52 entradas y no hay medición con
+  volúmenes mayores.
 
 ## 7. Fuentes
 

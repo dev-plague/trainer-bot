@@ -23,7 +23,7 @@ React 19.2+, TypeScript, React Router v8 (modo framework), Bun, PostgreSQL, Driz
 
 ## Comandos
 
-> Se completarán y confirmarán en la fase 0 del proyecto.
+Confirmados en `main`:
 
 ```bash
 bun install          # instalar dependencias
@@ -35,8 +35,12 @@ bun run build        # build de producción
 bun run db:generate  # generar migración con drizzle-kit
 bun run db:migrate   # aplicar migraciones
 bun run db:seed      # cargar catálogo de ejercicios
-docker compose up    # app + PostgreSQL para desarrollo
+docker compose up -d # solo PostgreSQL en 5433; la app corre con bun run dev
 ```
+
+Bun instala y ejecuta scripts; **Node ejecuta React Router**. Nunca uses
+`bun --bun react-router ...`: Bun ignora `NODE_OPTIONS` y el dev server muere (ver
+`docs/research/viabilidad-stack.md`). El despliegue está en `docs/deployment.md`.
 
 ## Arquitectura
 

@@ -1,6 +1,6 @@
 # Trainerbot — Brief de producto
 
-> **Estado:** vigente · **Última revisión:** 2026-11-12 · **Responsable:** dev-plague
+> **Estado:** vigente · **Última revisión:** 2026-11-13 · **Responsable:** dev-plague
 >
 > Este documento es la fuente de verdad del **qué** y el **por qué**. Cualquier cambio
 > de alcance se hace por PR modificando este archivo (y, si es una decisión relevante,
@@ -27,6 +27,10 @@ La aplicación es web, **mobile first** y responsive (debe verse bien también e
 (2) indicar cómo quiere que Trainerbot se dirija a ella, (3) completar el formulario,
 (4) ver su IMC explicado, (5) generar un plan y (6) completar una sesión ejercicio por
 ejercicio.
+
+**Estado:** el criterio se cumple y el MVP está entregado desde el 2026-11-13 (ver
+[backlog](backlog.md)). Lo que queda no es alcance nuevo: es el
+[despliegue](../deployment.md) y la revisión profesional del catálogo y del motor.
 
 **Fuera de alcance del MVP:** IA o chat, nutrición, pagos, funciones sociales, videos,
 notificaciones, PWA/offline, gamificación, multi-idioma (solo se centralizan los textos en
@@ -155,10 +159,10 @@ Usar la **última versión estable** de cada pieza y verificarla al instalar
 |---|---|
 | UI | React 19.2+ |
 | Lenguaje | TypeScript |
-| Enrutamiento | React Router v8 en modo framework (Vite 7+). Importar desde `react-router`, no `react-router-dom` |
-| Runtime / paquetes | Bun. Validar compatibilidad con Vite y React Router en la fase 0; respaldo: Node 22.22+ en Docker |
-| Base de datos | PostgreSQL |
-| ORM | Drizzle ORM + drizzle-kit (confirmar si la 1.0 ya es estable) |
+| Enrutamiento | React Router v8 en modo framework (Vite 8). Importar desde `react-router`, no `react-router-dom` |
+| Runtime / paquetes | Bun instala y ejecuta scripts; Node 22.22+ ejecuta React Router y el servidor (Docker y CI) |
+| Base de datos | PostgreSQL 18 |
+| ORM | Drizzle ORM 0.45 + drizzle-kit 0.31 (la 1.0 aún está en RC) |
 | Autenticación | **Better Auth** (con adaptador de Drizzle) |
 | UI kit | Tailwind + shadcn/ui |
 | Iconos | HugeIcons (paquete gratuito) |
