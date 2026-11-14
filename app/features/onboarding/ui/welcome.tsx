@@ -1,15 +1,13 @@
 import { Link } from "react-router";
 
-import { common } from "~/content/common";
+import { landing } from "~/content/landing";
 import { requireGuest } from "~/features/auth";
 import { Button } from "~/shared/ui/button";
-import { Card, CardContent } from "~/shared/ui/card";
-import { ArrowRightIcon, PlanIcon } from "~/shared/ui/icons";
-import { BrandMark } from "~/shared/ui/page-header";
 import type { Route } from "./+types/welcome";
+import { LandingGreeting } from "./landing-greeting";
 
 export function meta() {
-  return [{ title: common.appName }, { name: "description", content: common.tagline }];
+  return [{ title: landing.wordmark }, { name: "description", content: landing.pitch }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -18,47 +16,38 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Welcome() {
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-6 py-12">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(70%_60%_at_50%_0%,color-mix(in_oklab,var(--accent)_22%,transparent),transparent)]"
-      />
+    <main className="flex min-h-dvh flex-col bg-background">
+      <div className="mx-auto flex w-full max-w-[440px] flex-1 flex-col px-6 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] sm:justify-center sm:px-8 sm:py-16">
+        <header className="flex min-h-16 items-center justify-between">
+          <p className="inline-flex items-center gap-2.5 text-base font-semibold tracking-tight">
+            <span aria-hidden="true" className="size-2.5 rounded-full bg-accent" />
+            {landing.wordmark}
+          </p>
+          <Link
+            to="/entrar"
+            className="-mr-2 inline-flex min-h-11 items-center rounded-md px-2 text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          >
+            {landing.login}
+          </Link>
+        </header>
 
-      <div className="relative flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <BrandMark />
-          <span className="font-semibold tracking-tight">{common.appName}</span>
+        <div className="landing-rise flex flex-1 flex-col justify-center gap-3 pt-10 pb-16 sm:flex-none sm:gap-4 sm:pt-16 sm:pb-0">
+          <LandingGreeting />
+          <h1 className="text-4xl leading-[1.08] font-semibold tracking-tight text-balance sm:text-5xl">
+            {landing.headline}
+          </h1>
+          <p className="text-base text-muted-foreground sm:text-lg">{landing.pitch}</p>
         </div>
-        <Link
-          to="/entrar"
-          className="rounded-lg px-3 py-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
-        >
-          {common.login}
-        </Link>
+
+        <div className="flex flex-col gap-3 sm:mt-12">
+          <Button asChild size="lg" className="h-12 w-full text-base">
+            <Link to="/registro">{landing.cta}</Link>
+          </Button>
+          <p className="text-center text-xs leading-relaxed text-muted-foreground">
+            {landing.disclaimer}
+          </p>
+        </div>
       </div>
-
-      <header className="relative space-y-4">
-        <h1 className="text-4xl leading-[1.08] font-semibold tracking-tight text-balance">
-          {common.tagline}
-        </h1>
-        <p className="text-base leading-relaxed text-muted-foreground">{common.notAi}</p>
-      </header>
-
-      <Card className="relative border-primary/20 bg-card/80 shadow-sm backdrop-blur">
-        <CardContent className="flex items-start gap-3">
-          <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <PlanIcon size={20} />
-          </span>
-          <p className="text-sm leading-relaxed text-muted-foreground">{common.welcomeCard}</p>
-        </CardContent>
-      </Card>
-
-      <Button asChild size="lg" className="relative w-full gap-2">
-        <Link to="/registro">
-          {common.createAccount}
-          <ArrowRightIcon size={18} />
-        </Link>
-      </Button>
     </main>
   );
 }
