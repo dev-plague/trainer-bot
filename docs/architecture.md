@@ -1,6 +1,6 @@
 # Arquitectura
 
-> **Estado:** vigente · **Última revisión:** 2026-11-12
+> **Estado:** vigente · **Última revisión:** 2026-11-13
 >
 > Explica **cómo** se organiza el código. El **qué** y el **por qué** están en
 > [`docs/product/brief.md`](product/brief.md); las reglas para agentes y devs en
@@ -25,49 +25,50 @@ pieza necesita existir solo para "respetar la arquitectura", no se escribe.
 
 ```text
 app/
-  root.tsx                 # shell de la app (HTML, providers)
+  root.tsx                 # shell de la app (HTML, providers, toasts)
   routes.ts                # registro de rutas de React Router
+  app.css                  # tokens de color (ver docs/ui/sistema-de-color.md)
   features/
     auth/
       domain/              # reglas de sesión y permisos, sin Better Auth
       data/                # schema.ts generado por Better Auth + consultas
       server.ts            # instancia de Better Auth (la carga su CLI)
-      ui/                  # login, registro y avisos
+      ui/                  # login, registro, cuenta y handler de /api/auth
       index.ts             # API pública de la feature
     onboarding/
       domain/              # validaciones del cuestionario y del trato
       data/                # perfil, consentimientos, PAR-Q
-      ui/                  # pasos del onboarding
+      ui/                  # bienvenida, consentimiento, onboarding, perfil, salud, ajustes
       index.ts
     bmi/
-      domain/              # cálculo y clasificación del IMC
-      ui/                  # explicación y presentación
+      domain/              # cálculo, clasificación y meta intermedia
+      ui/                  # pantalla explicativa
       index.ts
     plans/
-      domain/              # motor de planes: reglas puras y testeables
-      data/                # planes y días generados
-      ui/                  # formulario y vista del plan
+      domain/              # motor determinista, resumen del día y sustituciones
+      data/                # plan activo, persistencia y catálogo para el motor
+      ui/                  # formulario, vista semanal y cambio de ejercicio
       index.ts
     exercises/
-      domain/              # tipos del catálogo y reglas de equivalencia
-      data/                # catálogo y seed
-      ui/                  # detalle de ejercicio
+      domain/              # tipos del catálogo, invariantes y equivalencias
+      data/                # schema, seed-data y seed del catálogo
+      ui/                  # ficha de detalle de ejercicio
       index.ts
     sessions/
-      domain/              # progreso de una sesión (puro)
-      data/                # sesiones y progreso
-      ui/                  # pantalla guiada ejercicio por ejercicio
+      domain/              # progreso puro de la sesión (ejercicio y serie actuales)
+      data/                # sesiones, registros y acciones
+      ui/                  # inicio y pantalla guiada
       index.ts
   shared/
-    db/                    # cliente Drizzle y utilidades de conexión
-    ui/                    # componentes shadcn/ui reutilizados
+    db/                    # cliente Drizzle
+    ui/                    # componentes shadcn/ui y shell de la app
     lib/                   # utilidades sin conocimiento del dominio
-  content/                 # textos de interfaz en español
+  content/                 # textos de interfaz en español, uno por feature
   db/
     schema.ts              # barrel: reúne los esquemas de cada feature
 drizzle/                   # migraciones generadas por drizzle-kit (versionadas)
 docs/
-  adr/  product/  research/
+  adr/  product/  research/  ui/
 ```
 
 Reglas de dependencia:
@@ -96,7 +97,7 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 export default [
   index("features/onboarding/ui/welcome.tsx"),
   route("plan", "features/plans/ui/plan-view.tsx"),
-  route("sesion/:id", "features/sessions/ui/session-run.tsx"),
+  route("sesion/:id", "features/sessions/ui/session-view.tsx"),
 ] satisfies RouteConfig;
 ```
 
@@ -117,8 +118,10 @@ export default [
 ```ts
 // app/db/schema.ts
 export * from "../features/auth/data/schema";
+export * from "../features/exercises/data/schema";
 export * from "../features/onboarding/data/schema";
 export * from "../features/plans/data/schema";
+export * from "../features/sessions/data/schema";
 ```
 
 Se usan rutas relativas a propósito: `drizzle-kit` y el CLI de Better Auth no pasan por
@@ -149,10 +152,12 @@ bun run db:generate
   react-router ...`: desde React Router 8.3 el CLI se relanza con `NODE_OPTIONS`, que Bun
   ignora, y el dev server muere. Ver
   [`docs/research/viabilidad-stack.md`](research/viabilidad-stack.md).
-- Docker y CI usan Node 22.22 o superior.
-- **Despliegue:** un VPS propio con Dokploy, al final del proyecto. Hasta entonces no se
-  escribe el Dockerfile de la app.
-- Comandos (los `db:*` llegan con Drizzle):
+- Docker y CI usan Node 22.22 o superior (hoy `node:22-alpine` en la imagen y Node 22 en CI).
+- **Despliegue:** imagen Docker multi-stage (`Dockerfile`) ejecutada por un VPS propio con
+  Dokploy y PostgreSQL 18. Bun instala y corre las migraciones; Node arranca `server.mjs`
+  (Express + adaptador de React Router). La guía completa está en
+  [`docs/deployment.md`](deployment.md).
+- Comandos:
 
 ```bash
 bun install          # dependencias

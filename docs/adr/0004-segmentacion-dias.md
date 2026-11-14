@@ -1,6 +1,6 @@
 # ADR 0004 — Segmentación de días por grupos musculares
 
-- **Estado:** propuesto
+- **Estado:** aceptado
 - **Fecha:** 2026-11-13
 - **Decisión relacionada:** #77
 

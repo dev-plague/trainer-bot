@@ -1,6 +1,6 @@
 # ADR 0003 — Perfiles del motor como datos tipados
 
-- **Estado:** propuesto
+- **Estado:** aceptado
 - **Fecha:** 2026-11-12
 - **Decisión relacionada:** #55
 
